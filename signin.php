@@ -1,5 +1,29 @@
 <?php
 session_start();
+require('connect.php');
+
+//trường hợp đã đăng xuất nhưng vẫn có cookie còn hạn sử dụng
+//thì vào lại trang chủ mà ko cần đăng nhập
+if(isset($_COOKIE['remember'])) {
+    $token = $_COOKIE['remember'];
+    $sql = "SELECT *FROM customers WHERE token = '$token' LIMIT 1";
+    $arr = mysqli_query($connect, $sql);
+    $num_rows = mysqli_num_rows($arr);
+
+    if($num_rows == 1) {
+        $result = mysqli_fetch_array($arr);
+        //gán lại giá trị
+        $_SESSION['id']  = $result['id'];
+        $_SESSION['name']  = $result['name'];
+    }
+}
+
+//trường hợp đã đăng nhập mà vào lại trang signin này 
+//thì điều hướng về trang người dùng luôn
+if(isset($_SESSION['id'])) {    
+    header('Location: index.php');
+    return 0;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -66,6 +90,11 @@ session_start();
 
                                 <div class="auth-form__group">
                                     <input type="password" name="password" class="auth-form__input" placeholder="Nhập vào mật khẩu của bạn">
+                                </div>
+
+                                <div class="auth-form__group">
+                                    <span class="auth-form__group-title">Ghi nhớ đăng nhập</span>
+                                    <input class="auth-form__group-checkbox" type="checkbox" name="remember">
                                 </div>
                             </div>
 

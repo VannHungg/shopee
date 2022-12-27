@@ -1,11 +1,11 @@
 <?php
 session_start();
-if (!isset($_SESSION['id'])) {
-    $_SESSION['status'] = "fail";
-    $_SESSION['message'] = "Bạn cần đăng nhập vào tài khoản";
-    header('Location: signin.php');
-    return 0;
-}
+// if (!isset($_SESSION['id'])) {
+//     $_SESSION['status'] = "fail";
+//     $_SESSION['message'] = "Bạn cần đăng nhập vào tài khoản";
+//     header('Location: signin.php');
+//     return 0;
+// }
 ?>
 
 <!DOCTYPE html>
@@ -123,24 +123,27 @@ if (!isset($_SESSION['id'])) {
                                 Trợ giúp
                             </a>
                         </li>
-                        <!-- <li class="header__navbar-item header__navbar-item--strong header__navbar-item--separate">Đăng ký</li>
-                        <li class="header__navbar-item header__navbar-item--strong">Đăng nhập</li> -->
-                        <li class="header__navbar-item header__navbar-user">
-                            <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
-                            <span class="header__navbar-user-name"><?= $_SESSION['name']; ?></span>
+                        <?php if (!isset($_SESSION['id'])) {?>
+                            <a href="signup.php" class="header__navbar-item header__navbar-item--strong header__navbar-item--separate">Đăng ký</a>
+                            <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
+                        <?php } else { ?>
+                            <li class="header__navbar-item header__navbar-user">
+                                <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
+                                <span class="header__navbar-user-name"><?= $_SESSION['name']; ?></span>
 
-                            <ul class="header__navbar-user-menu">
-                                <li class="header__navbar-user-item">
-                                    <a href="">Tài khoản của tôi</a>
-                                </li>
-                                <li class="header__navbar-user-item">
-                                    <a href="">Đơn mua</a>
-                                </li>
-                                <li class="header__navbar-user-item">
-                                    <a href="signout.php">Đăng xuất</a>
-                                </li>
-                            </ul>
-                        </li>
+                                <ul class="header__navbar-user-menu">
+                                    <li class="header__navbar-user-item">
+                                        <a href="">Tài khoản của tôi</a>
+                                    </li>
+                                    <li class="header__navbar-user-item">
+                                        <a href="">Đơn mua</a>
+                                    </li>
+                                    <li class="header__navbar-user-item">
+                                        <a href="signout.php">Đăng xuất</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        <?php }?>
                     </ul>
                 </nav>
 
