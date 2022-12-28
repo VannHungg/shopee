@@ -1614,3 +1614,15 @@ i.home-product-item__like-icon--fill {
 .auth-form__controls--mr {
     margin-bottom: 20px;
 }
+
+.manage__dasboard-show-item-quantity-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.manage__dasboard-show-item-quantity {
+    font-size: 1.4rem;
+    border: 1px solid #ccc;
+    padding: 4px 10px;
+}

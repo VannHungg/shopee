@@ -217,7 +217,13 @@ $cart = $_SESSION['cart'];
                                                 <span class="manage__dasboard-show-item-name"><?= $each['name'] ?></span>
                                             </div>
                                             <div class="col col-3"><?= number_format($each['price']) ?>đ</div>
-                                            <div class="col col-3"><?= $each['quantity'] ?></div>
+                                            <div class="col col-3">
+                                                <div class="manage__dasboard-show-item-quantity-group">
+                                                    <a href="decrease_quantity.php?id=<?=$id?>" class="decrease-quantity">-</a>
+                                                    <span class="manage__dasboard-show-item-quantity"><?= $each['quantity'] ?></span>
+                                                    <a href="increase_quantity.php?id=<?=$id?>" class="increase-quantity">+</a>
+                                                </div>
+                                            </div>
                                             <div class="col col-3"><?= number_format($each['price'] * $each['quantity']) ?>đ</div>
                                             <div class="col col-4">
                                                 <a href="delete.php?id=<?= $id ?>" class="manage__dasboard-show-item-action">Xóa</a>

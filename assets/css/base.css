@@ -335,3 +335,13 @@ vì phía trên cũng có .btn*/
 .alert-fail {
     background-color: var(--fail);
 }
+
+.decrease-quantity, 
+.increase-quantity {
+    display: block;
+    text-decoration: none;
+    font-size: 2rem;
+    color: var(--text-color);
+    padding: 4px;
+    border: 1px solid #ccc;
+}
