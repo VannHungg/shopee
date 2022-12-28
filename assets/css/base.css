@@ -16,7 +16,7 @@
     --color: #6c757d;
 
     --header-height: 120px;
-    --navbar-height: 24px;
+    --navbar-height: 36px;
     --header-with-search-height: calc(var(--header-height) - var(--navbar-height));
 }
 
@@ -32,7 +32,24 @@ html {
 }
 
 .mrt24 {
-    margin-top: 24px!important;
+    margin-top: 24px !important;
+}
+
+.mrl8 {
+    margin-left: 8px !important;
+}
+
+.mrr8 {
+    margin-right: 8px !important;
+}
+
+.border--primary {
+    border: 2px solid var(--primary-color);
+    border-radius: 2px;
+}
+
+.color--primary {
+    color: var(--primary-color) !important;
 }
 
 /*responsive*/
@@ -76,10 +93,11 @@ html {
 }
 
 /*Animation*/
-@keyframes  fadeIn{
+@keyframes fadeIn {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -89,6 +107,7 @@ html {
     from {
         transform: scale(--growth-from);
     }
+
     to {
         transform: scale(--growth-to);
     }
@@ -238,7 +257,7 @@ vì phía trên cũng có .btn*/
 
 .pagination-item {
     margin: 0 10px;
-}   
+}
 
 .pagination-item--actived .pagination-item__link {
     background-color: var(--primary-color);
@@ -273,6 +292,7 @@ vì phía trên cũng có .btn*/
         opacity: 0;
         transform: translateX(100%);
     }
+
     to {
         opacity: 1;
         transform: translateX(0%);

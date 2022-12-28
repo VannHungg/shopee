@@ -274,7 +274,7 @@ session_start();
 
                                 </ul>
 
-                                <a href="cart.php" class="header__cart-view-product btn btn--primary mrt24">Xem giỏ hàng</a>
+                                <a href="viewcart.php" class="header__cart-view-product btn btn--primary mrt24">Xem giỏ hàng</a>
                             </div>
                         </div>
                     </div>
@@ -351,7 +351,7 @@ session_start();
                                 <!-- product item -->
                                 <?php foreach ($results as $value) { ?>
                                     <div class="grid__column-2-4">
-                                        <a href="#" class="home-product-item">
+                                        <div class="home-product-item">
                                             <div class="home-product-item__img" style="background-image: url(photos/<?= $value['photo'] ?>"></div>
                                             <h4 class="home-product-item__name"><?= $value['name'] ?></h4>
                                             <div class="home-product-item__price">
@@ -393,10 +393,12 @@ session_start();
                                                         <i class="fa-solid fa-star home-product-item__star"></i>
                                                         <span class="home-product-item__sold">Đã bán 9,6k</span>
                                                     </div>
-                                                    <div class="home-product-item__like home-product-item__like--liked">
-                                                        <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
-                                                        <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
-                                                    </div>
+                                                    <?php if(isset($_SESSION['id'])) {?>
+                                                        <a href="add_to_cart.php?id=<?= $value['id']?>" class="home-product-item__like home-product-item__like--liked">
+                                                            <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
+                                                            <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
+                                                        </a>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="home-product-item__favourite">
@@ -407,7 +409,7 @@ session_start();
                                                 <span class="home-product-item__sale-off-percent"><?= $value['discount'] ?>%</span>
                                                 <span class="home-product-item__sale-off-label">GIẢM</span>
                                             </div>
-                                        </a>
+                                        </div>
                                     </div>
                                 <?php } ?>
                             </div>

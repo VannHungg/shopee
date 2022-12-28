@@ -17,7 +17,7 @@
 
     --header-portal-height: 54px;
     --header-height: 120px;
-    --navbar-height: 24px;
+    --navbar-height: 24px; /*24*/
     --header-with-search-height: calc(var(--header-height) - var(--navbar-height));
 }
 
