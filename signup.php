@@ -76,6 +76,10 @@
                                     <input type="text" name="phone" class="auth-form__input" placeholder="Nhập vào sđt của bạn">
                                 </div>
 
+                                <div class="auth-form__group">
+                                    <input type="text" name="address" class="auth-form__input" placeholder="Địa chỉ của bạn là ...">
+                                </div>
+
                                 <div class="auth-form__group auth-form__input-info">
                                     <span class="auth-form__input-sex-title">Giới tính</span>
                                     <div class="auth-form__input-sex-group">

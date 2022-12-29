@@ -6,8 +6,10 @@ $name = $_POST['name'];
 $email = $_POST['email'];
 $password = $_POST['password'];
 $phone = $_POST['phone'];
+$address = $_POST['address'];
 $sex = $_POST['sex'];
 $dob = date('Y-m-d', strtotime($_POST['dateofbirth']));
+$token = uniqid('user_', true);
 
 $sql = "SELECT count(*) as count FROM customers
         WHERE email = '$email'";
@@ -25,8 +27,8 @@ else {
     $_SESSION['status'] = "success";
     $_SESSION['message'] = "Đăng ký tài khoản thành công";
 
-    $sql_insert = "INSERT INTO customers(name, sex, birthday, email, password, phone)
-                   VALUES ('$name', '$sex', '$dob', '$email', '$password', '$phone')";
+    $sql_insert = "INSERT INTO customers(name, sex, birthday, email, password, phone, address, token)
+                   VALUES ('$name', '$sex', '$dob', '$email', '$password', '$phone', '$address', '$token')";
     mysqli_query($connect, $sql_insert);
 
     $sql_select_id = "SELECT id FROM customers

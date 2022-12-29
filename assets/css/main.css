@@ -5,6 +5,8 @@
 }
 
 .header--box-shadown {
+    position: relative;
+    z-index: 1;
     box-shadow: 0 1px 5rem rgba(0, 0, 0, 0.2);
 }
 
@@ -949,6 +951,10 @@
     background-color: #f5f5f5;
 }
 
+.app__container--reset {
+    background-color: var(--white-color);
+}
+
 .app__content {
     padding-top: 36px;
 }
@@ -968,13 +974,11 @@
     min-height: 1000px;
     background-color: var(--white-color);
     border-radius: 2px;
-    box-shadow: 0 1px 5px #d0d0d0;
     color: var(--text-color);
 }
 
 .manage__dasboard--reset {
-    background-color: #f5f5f5;
-    box-shadow: none;
+    min-height: auto;
 }
 
 .manage__dasboard-nav {
@@ -1135,6 +1139,44 @@
     display: block;
     padding: 8px;
     color: var(--blue-color);
+}
+
+.app__content-payment {
+    border-top: 2px solid var(--primary-color);
+}
+
+.app__content-total-payment {
+    background-color: var(--white-color);
+    border-radius: 2px;
+    box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 64px;
+    padding: 0 16px;
+}
+
+.app__content-total-payment__select-all,
+.app__content-total-payment__select-all a,
+.app__content-total-payment__link,
+.app__content-total-payment__link input {
+    font-size: 1.6rem;
+    color: var(--black-color);
+    text-decoration: none;
+}
+
+.app__content-total-payment__link input {
+    border: none;
+    padding: 12px 16px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 2px;
+    margin-left: 12px;
+    cursor: pointer;
+}
+
+.app__content-total-payment__select-all a {
+    margin: 0 8px;
 }
 
 .category {
@@ -1601,7 +1643,7 @@ i.home-product-item__like-icon--fill {
 
 .auth-form--op-top-signup {
     position: absolute;
-    top: 108px;
+    top: 90px;
     right: 0;
 }
 
@@ -1617,12 +1659,30 @@ i.home-product-item__like-icon--fill {
 
 .manage__dasboard-show-item-quantity-group {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .manage__dasboard-show-item-quantity {
     font-size: 1.4rem;
-    border: 1px solid #ccc;
-    padding: 4px 10px;
+    border: 1px solid rgb(223, 223, 223);
+    padding: 4px 12px;
+}
+
+.header__cart-list-notify {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header__cart-list--no-cart--go-home {
+    display: block;
+    width: 168px;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    border-radius: 2px;
+    text-decoration: none;
+    margin-top: 24px;
 }

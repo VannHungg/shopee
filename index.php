@@ -1,5 +1,8 @@
 <?php
 session_start();
+if(isset($_SESSION['cart'])) {
+    $cart = $_SESSION['cart'];
+}
 // if (!isset($_SESSION['id'])) {
 //     $_SESSION['status'] = "fail";
 //     $_SESSION['message'] = "Bạn cần đăng nhập vào tài khoản";
@@ -123,7 +126,7 @@ session_start();
                                 Trợ giúp
                             </a>
                         </li>
-                        <?php if (!isset($_SESSION['id'])) {?>
+                        <?php if (!isset($_SESSION['id'])) { ?>
                             <a href="signup.php" class="header__navbar-item header__navbar-item--strong header__navbar-item--separate">Đăng ký</a>
                             <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
                         <?php } else { ?>
@@ -143,7 +146,7 @@ session_start();
                                     </li>
                                 </ul>
                             </li>
-                        <?php }?>
+                        <?php } ?>
                     </ul>
                 </nav>
 
@@ -206,75 +209,46 @@ session_start();
 
                     <div class="header__cart">
                         <div class="header__cart-wrap">
-                            <a href="cart.php" class="header__cart-link">
+                            <a href="viewcart.php" class="header__cart-link">
                                 <i class="header__cart-icon fa-solid fa-cart-shopping"></i>
-                                <span class="header__cart--num-product">40</span>
+                                <?php if (!empty($_SESSION['cart'])) { ?>
+                                    <span class="header__cart--num-product"><?= count($_SESSION['cart']) ?></span>
+                                <?php } ?>
                             </a>
 
-                            <div class="header__cart-list">
+                            <div class="header__cart-list <?php if (empty($_SESSION['cart'])) { ?> header__cart-list--no-cart <?php } ?>">
                                 <img class="header__cart-list--no-cart-img" src="./assets/img/no_cart.png" alt="no_cart">
                                 <span class="header__cart-list--no-msg">Chưa có sản phẩm</span>
 
                                 <!-- has product -->
-                                <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
-                                <ul class="header__cart-list-item">
-                                    <li class="header__cart-item">
-                                        <img class="header__cart-img" src="https://i.pinimg.com/564x/f5/fb/f3/f5fbf32153c7fc533dc79f9124822b22.jpg" alt="">
+                                <?php if (!empty($_SESSION['cart'])) { ?>
+                                    <h4 class="header__cart-heading">Sản phẩm đã thêm</h4>
+                                    <ul class="header__cart-list-item">
+                                        <?php foreach ($cart as $id => $each) { ?>
+                                            <li class="header__cart-item">
+                                                <img class="header__cart-img" src="photos/<?= $each['photo'] ?>" alt="">
 
-                                        <div class="header__cart-item-info">
-                                            <div class="header__cart-item-head">
-                                                <h5 class="header__cart-item-name">Mô hình pokemon đáng yêu</h5>
-                                                <span class="header__cart-item-price">5.000</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-quantity">1</span>
-                                            </div>
+                                                <div class="header__cart-item-info">
+                                                    <div class="header__cart-item-head">
+                                                        <h5 class="header__cart-item-name"><?= $each['name'] ?></h5>
+                                                        <div>
+                                                            <span class="header__cart-item-price"><?= $each['price'] ?>đ</span>
+                                                            <span class="header__cart-item-multiply">x</span>
+                                                            <span class="header__cart-item-quantity"><?= $each['quantity'] ?></span>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="header__cart-item-body">
-                                                <span class="header__cart-item-description">Phân loại: Bạc</span>
-                                                <span class="header__cart-item-remove">Xóa</span>
-                                            </div>
-                                        </div>
-                                    </li>
+                                                    <div class="header__cart-item-body">
+                                                        <span class="header__cart-item-description">Phân loại: X</span>
+                                                        <a href="delete.php?id=<?= $id ?>&page=index" class="manage__dasboard-show-item-action">Xóa</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
 
-                                    <li class="header__cart-item">
-                                        <img class="header__cart-img" src="https://i.pinimg.com/564x/f5/fb/f3/f5fbf32153c7fc533dc79f9124822b22.jpg" alt="">
-
-                                        <div class="header__cart-item-info">
-                                            <div class="header__cart-item-head">
-                                                <h5 class="header__cart-item-name">Mô hình pokemon đáng yêu</h5>
-                                                <span class="header__cart-item-price">5.000</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-quantity">1</span>
-                                            </div>
-
-                                            <div class="header__cart-item-body">
-                                                <span class="header__cart-item-description">Phân loại: Bạc</span>
-                                                <span class="header__cart-item-remove">Xóa</span>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                    <li class="header__cart-item">
-                                        <img class="header__cart-img" src="https://i.pinimg.com/564x/f5/fb/f3/f5fbf32153c7fc533dc79f9124822b22.jpg" alt="">
-
-                                        <div class="header__cart-item-info">
-                                            <div class="header__cart-item-head">
-                                                <h5 class="header__cart-item-name">Mô hình pokemon đáng yêu</h5>
-                                                <span class="header__cart-item-price">5.000</span>
-                                                <span class="header__cart-item-multiply">x</span>
-                                                <span class="header__cart-item-quantity">1</span>
-                                            </div>
-
-                                            <div class="header__cart-item-body">
-                                                <span class="header__cart-item-description">Phân loại: Bạc</span>
-                                                <span class="header__cart-item-remove">Xóa</span>
-                                            </div>
-                                        </div>
-                                    </li>
-
-                                </ul>
-
-                                <a href="viewcart.php" class="header__cart-view-product btn btn--primary mrt24">Xem giỏ hàng</a>
+                                    <a href="viewcart.php" class="header__cart-view-product btn btn--primary mrt24">Xem giỏ hàng</a>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -283,6 +257,9 @@ session_start();
 
         </header>
 
+        <?php
+        require('./portal/alert.php');
+        ?>
         <div class="app__container">
             <div class="grid">
                 <div class="grid__row app__content">
@@ -393,8 +370,8 @@ session_start();
                                                         <i class="fa-solid fa-star home-product-item__star"></i>
                                                         <span class="home-product-item__sold">Đã bán 9,6k</span>
                                                     </div>
-                                                    <?php if(isset($_SESSION['id'])) {?>
-                                                        <a href="add_to_cart.php?id=<?= $value['id']?>" class="home-product-item__like home-product-item__like--liked">
+                                                    <?php if (isset($_SESSION['id'])) { ?>
+                                                        <a href="add_to_cart.php?id=<?= $value['id'] ?>" class="home-product-item__like home-product-item__like--liked">
                                                             <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
                                                             <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
                                                         </a>

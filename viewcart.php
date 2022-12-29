@@ -1,6 +1,9 @@
 <?php
 session_start();
-$cart = $_SESSION['cart'];
+if (isset($_SESSION['cart'])) {
+    $cart = $_SESSION['cart'];
+    $sum = 0;
+}
 // if (!isset($_SESSION['id'])) {
 //     $_SESSION['status'] = "fail";
 //     $_SESSION['message'] = "Bạn cần đăng nhập vào tài khoản";
@@ -187,54 +190,116 @@ $cart = $_SESSION['cart'];
             </div>
         </header>
 
-        <div class="app__container">
+        <div class="app__container app__container--reset">
             <div class="grid">
-                <div class="grid__row app__content">
-                    <div class="app__content-product app__content-product--reset">
-                        <?php
-                        require('./portal/alert.php');
-                        ?>
-                        <form action="process_cart.php" method="post" class="manage__dasboard manage__dasboard--reset">
-                            <div class="manage__dasboard-show">
-                                <ul class="manage__dasboard-show-list">
-                                    <li class="manage__dasboard-show-item-header manage__dasboard-show-item-header--reset">
-                                        <div class="col col-2">
-                                            <input type="radio" name="" id="">
-                                            Sản phẩm
-                                        </div>
-                                        <div class="col col-3">Đơn giá</div>
-                                        <div class="col col-3">Số lượng</div>
-                                        <div class="col col-3">Số tiền</div>
-                                        <div class="col col-4">
-                                            Thao tác
-                                        </div>
-                                    </li>
-                                    <?php foreach ($cart as $id => $each) { ?>
-                                        <li class="manage__dasboard-show-item-body">
-                                            <div class="col col-2 manage__dasboard-show-item-name-product">
-                                                <input type="radio" name="" id="" class="mrr8">
-                                                <img src="photos/<?= $each['photo'] ?>" alt="" class="manage__dasboard-show-item-img">
-                                                <span class="manage__dasboard-show-item-name"><?= $each['name'] ?></span>
+                <?php if (!empty($_SESSION['cart'])) { ?>
+                    <div class="grid__row app__content">
+                        <div class="app__content-product app__content-product--reset">
+                            <?php
+                            require('./portal/alert.php');
+                            ?>
+                            <form action="process_cart.php" method="post" class="manage__dasboard manage__dasboard--reset">
+                                <div class="manage__dasboard-show">
+                                    <ul class="manage__dasboard-show-list">
+                                        <li class="manage__dasboard-show-item-header manage__dasboard-show-item-header--reset">
+                                            <div class="col col-2">
+                                                <input type="radio" name="" id="">
+                                                Sản phẩm
                                             </div>
-                                            <div class="col col-3"><?= number_format($each['price']) ?>đ</div>
-                                            <div class="col col-3">
-                                                <div class="manage__dasboard-show-item-quantity-group">
-                                                    <a href="decrease_quantity.php?id=<?=$id?>" class="decrease-quantity">-</a>
-                                                    <span class="manage__dasboard-show-item-quantity"><?= $each['quantity'] ?></span>
-                                                    <a href="increase_quantity.php?id=<?=$id?>" class="increase-quantity">+</a>
-                                                </div>
-                                            </div>
-                                            <div class="col col-3"><?= number_format($each['price'] * $each['quantity']) ?>đ</div>
+                                            <div class="col col-3">Đơn giá</div>
+                                            <div class="col col-3">Số lượng</div>
+                                            <div class="col col-3">Số tiền</div>
                                             <div class="col col-4">
-                                                <a href="delete.php?id=<?= $id ?>" class="manage__dasboard-show-item-action">Xóa</a>
+                                                Thao tác
                                             </div>
                                         </li>
-                                    <?php } ?>
-                                </ul>
-                            </div>
-                        </form>
+                                        <?php foreach ($cart as $id => $each) { ?>
+                                            <li class="manage__dasboard-show-item-body">
+                                                <div class="col col-2 manage__dasboard-show-item-name-product">
+                                                    <input type="radio" name="" id="" class="mrr8">
+                                                    <img src="photos/<?= $each['photo'] ?>" alt="" class="manage__dasboard-show-item-img">
+                                                    <span class="manage__dasboard-show-item-name"><?= $each['name'] ?></span>
+                                                </div>
+                                                <div class="col col-3"><?= number_format($each['price']) ?>đ</div>
+                                                <div class="col col-3">
+                                                    <div class="manage__dasboard-show-item-quantity-group">
+                                                        <a href="update_quantity.php?id=<?= $id ?>&type=decrease" class="decrease-quantity">-</a>
+                                                        <span class="manage__dasboard-show-item-quantity"><?= $each['quantity'] ?></span>
+                                                        <a href="update_quantity.php?id=<?= $id ?>&type=increase" class="increase-quantity">+</a>
+                                                    </div>
+                                                </div>
+                                                <div class="col col-3">
+                                                    <?php
+                                                    $sum += ($each['price'] * $each['quantity']);
+                                                    echo number_format($each['price'] * $each['quantity']);
+                                                    ?>đ
+                                                </div>
+                                                <div class="col col-4">
+                                                    <a href="delete.php?id=<?= $id ?>&page=viewcart" class="manage__dasboard-show-item-action">Xóa</a>
+                                                </div>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            </form>
+
+                            <?php 
+                                require('connect.php');
+                                $id = $_SESSION['id'];
+
+                                $sql = "SELECT *FROM customers WHERE id = '$id'";
+                                $arr = mysqli_query($connect, $sql);
+                                $result = mysqli_fetch_array($arr);
+                            ?>
+
+                            <form action="process_checkout.php" method="post" class="app__content-payment">
+                                <div class="auth-form pdbt24 mrbt24 mrt24 manage__dasboard-show-item-body">
+                                    <div class="auth-form__container">
+                                        <header class="auth-form__header">
+                                            <h3 class="auth-form__heading">Thông tin đặt hàng</h3>
+                                        </header>
+
+                                        <div class="auth-form__form">
+                                            <div class="auth-form__group">
+                                                <span class="auth-form__group-title">Tên: </span>
+                                                <input type="text" name="customer_name" class="auth-form__input" value="<?=$result['name']?>">
+                                            </div>
+
+                                            <div class="auth-form__group">
+                                                <span class="auth-form__group-title">Sđt: </span>
+                                                <input type="text" name="customer_phone" class="auth-form__input" value="<?=$result['phone']?>">
+                                            </div>
+
+                                            <div class="auth-form__group">
+                                                <span class="auth-form__group-title">Địa chỉ: </span>
+                                                <input type="text" name="customer_address" class="auth-form__input" value="<?=$result['address']?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="app__content-total-payment">
+                                    <div class="app__content-total-payment__select-all">
+                                        <input type="radio" name="" id="" class="mrr8">
+                                        <span>Chọn tất cả(3)</span>
+                                        <a href="">Xóa</a>
+                                    </div>
+
+                                    <div class="app__content-total-payment__link">
+                                        <span>Tổng thanh toán: <span class="color--primary"><?= number_format($sum) ?>đ</span></span>
+                                        <input type="submit" value="Đặt hàng">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                <?php } else { ?>
+                    <div class="header__cart-list-notify header__cart-list--no-cart">
+                        <img style="width: 100px;" class="header__cart-list--no-cart-img" src="./assets/img/no_cart.png" alt="no_cart">
+                        <span class="header__cart-list--no-msg">Giỏ hàng của bạn còn trống</span>
+                        <a href="index.php" class="header__cart-list--no-cart--go-home">MUA NGAY</a>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>
