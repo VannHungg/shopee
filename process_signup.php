@@ -7,7 +7,7 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 $phone = $_POST['phone'];
 $address = $_POST['address'];
-$sex = $_POST['sex'];
+$gender = $_POST['gender'];
 $dob = date('Y-m-d', strtotime($_POST['dateofbirth']));
 $token = uniqid('user_', true);
 
@@ -27,8 +27,8 @@ else {
     $_SESSION['status'] = "success";
     $_SESSION['message'] = "Đăng ký tài khoản thành công";
 
-    $sql_insert = "INSERT INTO customers(name, sex, birthday, email, password, phone, address, token)
-                   VALUES ('$name', '$sex', '$dob', '$email', '$password', '$phone', '$address', '$token')";
+    $sql_insert = "INSERT INTO customers(name, gender, birthday, email, password, phone, address, token)
+                   VALUES ('$name', '$gender', '$dob', '$email', '$password', '$phone', '$address', '$token')";
     mysqli_query($connect, $sql_insert);
 
     $sql_select_id = "SELECT id FROM customers

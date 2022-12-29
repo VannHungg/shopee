@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('../../connect.php');
+require('../check_super_admin_login.php');
 
 $name = addslashes($_POST['name']);
 $address = addslashes(nl2br($_POST['address']));

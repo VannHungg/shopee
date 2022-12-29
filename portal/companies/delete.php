@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('../../connect.php');
+require('../check_super_admin_login.php');
 $id = $_GET['id'];
 
 $sql = "DELETE FROM companies WHERE id = '$id'";

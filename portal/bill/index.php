@@ -28,10 +28,7 @@ require('../check_admin_login.php');
     session_start();
     require('../../connect.php');
 
-    $sql = "SELECT products.*, companies.name as company_name
-            FROM
-            products JOIN companies
-            ON products.company_id = companies.id";
+    $sql = "SELECT *FROM bill";
     $results = mysqli_query($connect, $sql);
     ?>
     <div class="app">
@@ -82,32 +79,50 @@ require('../check_admin_login.php');
                                     </a>
                                 </div>
 
-                                <a href="insert.php" class="manage__dasboard-nav--insert">Thêm sản phẩm</a>
+                                <!-- <a href="insert.php" class="manage__dasboard-nav--insert">Thêm sản phẩm</a> -->
                             </div>
 
                             <div class="manage__dasboard-show">
                                 <ul class="manage__dasboard-show-list">
                                     <li class="manage__dasboard-show-item-header">
-                                        <div class="col col-1">Tên sản phẩm</div>
-                                        <div class="col col-2">Mô tả</div>
-                                        <div class="col col-3">Giá tiền</div>
-                                        <div class="col col-3">Nhà sản xuất</div>
-                                        <div class="col col-4">
-                                            Hoạt động
-                                        </div>
+                                        <div class="col col-0">Mã</div>
+                                        <div class="col col-3">Thời gian đặt</div>
+                                        <div class="col col-2">Tên người nhận</div>
+                                        <div class="col col-2">Sđt người nhận</div>
+                                        <div class="col col-2">Địa chỉ người nhận</div>
+                                        <div class="col col-3">Trạng thái</div>
+                                        <div class="col col-3">Tổng tiền</div>
+                                        <div class="col col-4">Hoạt động</div>
                                     </li>
                                     <?php foreach ($results as $value) { ?>
                                         <li class="manage__dasboard-show-item-body">
-                                            <div class="col col-1 manage__dasboard-show-item-name-product">
-                                                <img src="../../photos/<?= $value['photo'] ?>" alt="" class="manage__dasboard-show-item-img">
-                                                <span class="manage__dasboard-show-item-name"><?= $value['name'] ?></span>
+                                            <div class="col col-0 manage__dasboard-show-item-name-product">
+                                                <span class="manage__dasboard-show-item-name"><?= $value['id'] ?></span>
                                             </div>
-                                            <div class="col col-2"><?= $value['description'] ?></div>
-                                            <div class="col col-3"><?= $value['price'] ?></div>
-                                            <div class="col col-3"><?= $value['company_name'] ?></div>
+                                            <div class="col col-3"><?= $value['time_order'] ?></div>
+                                            <div class="col col-2"><?= $value['customer_name'] ?></div>
+                                            <div class="col col-2"><?= $value['customer_phone'] ?></div>
+                                            <div class="col col-2"><?= $value['customer_address'] ?></div>
+                                            <div class="col col-3">
+                                                <?php 
+                                                if($value['status'] == 0) {
+                                                    echo "Đang duyệt";
+                                                }
+                                                else if($value['status'] == 1){
+                                                    echo "Đã duyệt";
+                                                }
+                                                else if($value['status'] == 2){
+                                                    echo "Đã hủy";
+                                                }
+                                                ?>
+                                            </div>
+                                            <div class="col col-3"><?= number_format($value['total_price']) ?>đ</div>
                                             <div class="col col-4">
-                                                <a href="update.php?id=<?= $value['id'] ?>" class="manage__dasboard-show-item-action">Cập nhật</a>
-                                                <a href="delete.php?id=<?= $value['id'] ?>" class="manage__dasboard-show-item-action">Xóa</a>
+                                                <a href="detail.php?id=<?= $value['id'] ?>" class="manage__dasboard-show-item-action">Xem chi tiết</a>
+                                                <?php if($value['status'] == 0) {?>
+                                                    <a href="update.php?id=<?= $value['id'] ?>&status=1" class="manage__dasboard-show-item-action">Duyệt đơn</a>
+                                                    <a href="update.php?id=<?= $value['id'] ?>&status=2" class="manage__dasboard-show-item-action">Hủy đơn</a>
+                                                <?php } ?>
                                             </div>
                                         </li>
                                     <?php } ?>

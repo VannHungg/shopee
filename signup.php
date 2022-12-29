@@ -81,14 +81,14 @@
                                 </div>
 
                                 <div class="auth-form__group auth-form__input-info">
-                                    <span class="auth-form__input-sex-title">Giới tính</span>
-                                    <div class="auth-form__input-sex-group">
-                                        <input type="radio" id="male" name="sex" class="auth-form__input-radio" value="Nam">
+                                    <span class="auth-form__input-gender-title">Giới tính</span>
+                                    <div class="auth-form__input-gender-group">
+                                        <input type="radio" id="male" name="gender" class="auth-form__input-radio" value="Nam">
                                         <label style="font-size: 1.3rem;" for="male">Nam</label>
                                     </div>
 
-                                    <div class="auth-form__input-sex-group">
-                                        <input type="radio" id="female" name="sex" class="auth-form__input-radio" value="Nữ">
+                                    <div class="auth-form__input-gender-group">
+                                        <input type="radio" id="female" name="gender" class="auth-form__input-radio" value="Nữ">
                                         <label style="font-size: 1.3rem;" for="female">Nữ</label>
                                     </div>
 

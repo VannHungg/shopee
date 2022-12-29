@@ -11,7 +11,7 @@
                 <a href="../portal/companies" class="app__content-item-link">Tất cả nhà sản xuất</a>
             </li>
             <li class="app__content-item">
-                <a href="" class="app__content-item-link">Thêm nhà sản xuất</a>
+                <a href="./insert.php" class="app__content-item-link">Thêm nhà sản xuất</a>
             </li>
             <li class="app__content-item">
                 <a href="" class="app__content-item-link">Cài đặt vận chuyển</a>
@@ -48,10 +48,10 @@
 
         <ul class="app__content-list">
             <li class="app__content-item">
-                <a href="" class="app__content-item-link">Tất cả</a>
+                <a href="../portal/bill" class="app__content-item-link">Tất cả</a>
             </li>
             <li class="app__content-item">
-                <a href="" class="app__content-item-link">Đơn hủy</a>
+                <a href="./delete.php" class="app__content-item-link">Hủy đơn</a>
             </li>
             <li class="app__content-item">
                 <a href="" class="app__content-item-link">Trả hàng/Hoàn tiền</a>

@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+//chưa đăng nhập vào admin
+if(empty($_SESSION['id'])) {
+    $_SESSION['status'] = "fail";
+    $_SESSION['message'] = "Bạn cần phải đăng nhập với tư cách admin";
+    header("Location: signin.php");
+    return 0;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

@@ -1,3 +1,11 @@
+<?php
+session_start();
+//nếu đã đăng nhập rồi
+// if (!empty($_SESSION['id'])) {
+//     header('Location: index.php');
+// }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +13,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopee - Kênh bán hàng</title>
+    <title>Shopee - Admin</title>
 
     <link rel="shortcut icon" type="image/x-icon" href="./assets/img/shopee-icon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
@@ -36,7 +44,7 @@
                 </div>
 
                 <div class="header__navbar-path">
-                    <span class="header__navbar-path--add-name-page">Kênh Người Bán</span>
+                    <span class="header__navbar-path--add-name-page">Admin</span>
                 </div>
 
                 <ul class="header__navbar-list">
@@ -54,50 +62,56 @@
             </nav>
         </header>
 
-        <div class="container-login">
-            <div class="grid-special">
-                <div class="container-login__content">
-                    <div class="container-login__content-left">
-                        <h3 class="container-login__content-left-title">Bán hàng chuyên nghiệp</h3>
-                        <span class="container-login__content-left-description">Quản lý shop của bạn một cách
-                             hiệu quả hơn trên Shopee với Shopee - Kênh Người bán</span>
-                        <img class="container-login__content-img" src="./assets/img/signup_portal.png" alt="background login">
-                    </div>
+        <div class="container-login-wrap">
+            <?php
+            require('alert.php');
+            ?>
 
-                    <form action="process_signin.php" method="get" class="auth-form--position auth-form">
-                        <div class="auth-form__container">
-                            <header class="auth-form__header">
-                                <h3 class="auth-form__heading">Đăng nhập vào kênh người bán</h3>
-                            </header>
-
-                            <div class="auth-form__form">
-                                <div class="auth-form__group">
-                                    <input type="email" name="email" class="auth-form__input" placeholder="Nhập vào email của bạn">
-                                </div>
-
-                                <div class="auth-form__group">
-                                    <input type="password" name="password" class="auth-form__input" placeholder="Nhập vào mật khẩu của bạn">
-                                </div>
-                            </div>
-
-                            <div class="auth-form__aside">
-                                <div class="auth-form__help">
-                                    <a href="" class="auth-form__help-link auth-form__help-link--primary">Quên mật khẩu</a>
-                                    <span class="auth-form__help--separate"></span>
-                                    <a href="" class="auth-form__help-link">Cần trợ giúp?</a>
-                                </div>
-                            </div>
-
-                            <div class="auth-form__controls">
-                                <input type="submit" class="btn btn--primary" value="Đăng nhập">
-                            </div>
-
-                            <div class="auth-form__signup">
-                                <span class="auth-form__signup-title">Chưa có tài khoản Shopee? </span>
-                                <a href="../signup.php" class="auth-form__signup-link">Tạo tài khoản</a>
-                            </div>
+            <div class="container-login">
+                <div class="grid-special">
+                    <div class="container-login__content">
+                        <div class="container-login__content-left">
+                            <h3 class="container-login__content-left-title">Bán hàng chuyên nghiệp</h3>
+                            <span class="container-login__content-left-description">Quản lý shop của bạn một cách
+                                hiệu quả hơn trên Shopee với Shopee - Admin</span>
+                            <img class="container-login__content-img" src="./assets/img/signup_portal.png" alt="background login">
                         </div>
-                    </form>
+
+                        <form action="process_signin.php" method="post" class="auth-form--position auth-form">
+                            <div class="auth-form__container">
+                                <header class="auth-form__header">
+                                    <h3 class="auth-form__heading">Đăng nhập vào trang admin</h3>
+                                </header>
+
+                                <div class="auth-form__form">
+                                    <div class="auth-form__group">
+                                        <input type="email" name="email" class="auth-form__input" placeholder="Nhập vào email của bạn">
+                                    </div>
+
+                                    <div class="auth-form__group">
+                                        <input type="password" name="password" class="auth-form__input" placeholder="Nhập vào mật khẩu của bạn">
+                                    </div>
+                                </div>
+
+                                <div class="auth-form__aside">
+                                    <div class="auth-form__help">
+                                        <a href="" class="auth-form__help-link auth-form__help-link--primary">Quên mật khẩu</a>
+                                        <span class="auth-form__help--separate"></span>
+                                        <a href="" class="auth-form__help-link">Cần trợ giúp?</a>
+                                    </div>
+                                </div>
+
+                                <div class="auth-form__controls">
+                                    <input type="submit" class="btn btn--primary" value="Đăng nhập">
+                                </div>
+
+                                <div class="auth-form__signup">
+                                    <span class="auth-form__signup-title">Chưa có tài khoản Shopee? </span>
+                                    <a href="" class="auth-form__signup-link">Tạo tài khoản</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

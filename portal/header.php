@@ -16,21 +16,27 @@
         </div>
 
         <ul class="header__navbar-list">
-            <li class="header__navbar-item header__navbar-user">
-                <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
-                <span class="header__navbar-user-name">Vănn Hưngg</span>
+            <?php if (empty($_SESSION['id'])) { ?>
+                <li class="header__navbar-item header__navbar-user">
+                    <a href="signin.php" class="header__navbar-user-name">Đăng nhập</a>
+                </li>
+            <?php } else { ?>
+                <li class="header__navbar-item header__navbar-user">
+                    <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
+                    <span class="header__navbar-user-name"><?= $_SESSION['name'] ?></span>
 
-                <ul class="header__navbar-user-menu">
-                    <li class="header__navbar-user-item">
-                        <i class="fa-regular fa-image"></i>
-                        <a href="">Hồ sơ Shop</a>
-                    </li>
-                    <li class="header__navbar-user-item">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                        <a href="">Đăng xuất</a>
-                    </li>
-                </ul>
-            </li>
+                    <ul class="header__navbar-user-menu">
+                        <li class="header__navbar-user-item">
+                            <i class="fa-regular fa-image"></i>
+                            <a href="">Hồ sơ Shop</a>
+                        </li>
+                        <li class="header__navbar-user-item">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <a href="signout.php">Đăng xuất</a>
+                        </li>
+                    </ul>
+                </li>
+            <?php } ?>
 
             <li class="header__navbar-item header__navbar-option">
                 <a href="" class="header__navbar-option-link">

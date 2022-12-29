@@ -403,12 +403,12 @@
     border: 1px solid #ccc;
 }
 
-.auth-form__input-sex-title {
+.auth-form__input-gender-title {
     font-size: 1.4rem;
     color: var(--text-color);
 }
 
-.auth-form__input-sex-group {
+.auth-form__input-gender-group {
     display: flex;
     align-items: center;
     margin: 0 8px;

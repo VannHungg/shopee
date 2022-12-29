@@ -28,11 +28,14 @@ require('../check_admin_login.php');
     session_start();
     require('../../connect.php');
 
-    $sql = "SELECT products.*, companies.name as company_name
-            FROM
-            products JOIN companies
-            ON products.company_id = companies.id";
+    $bill_id = $_GET['id'];
+
+    $sql = "SELECT *
+            FROM bill_product JOIN products
+            ON bill_product.product_id = products.id
+            WHERE bill_id = '$bill_id'";
     $results = mysqli_query($connect, $sql);
+    $total_price = 0;
     ?>
     <div class="app">
         <?php
@@ -82,35 +85,35 @@ require('../check_admin_login.php');
                                     </a>
                                 </div>
 
-                                <a href="insert.php" class="manage__dasboard-nav--insert">Thêm sản phẩm</a>
+                                <!-- <a href="insert.php" class="manage__dasboard-nav--insert">Thêm sản phẩm</a> -->
                             </div>
 
                             <div class="manage__dasboard-show">
                                 <ul class="manage__dasboard-show-list">
                                     <li class="manage__dasboard-show-item-header">
-                                        <div class="col col-1">Tên sản phẩm</div>
-                                        <div class="col col-2">Mô tả</div>
-                                        <div class="col col-3">Giá tiền</div>
-                                        <div class="col col-3">Nhà sản xuất</div>
-                                        <div class="col col-4">
-                                            Hoạt động
-                                        </div>
+                                        <div class="col col-2">Tên sản phẩm</div>
+                                        <div class="col col-1">Giá tiền</div>
+                                        <div class="col col-1">Số lượng</div>
                                     </li>
                                     <?php foreach ($results as $value) { ?>
                                         <li class="manage__dasboard-show-item-body">
-                                            <div class="col col-1 manage__dasboard-show-item-name-product">
-                                                <img src="../../photos/<?= $value['photo'] ?>" alt="" class="manage__dasboard-show-item-img">
-                                                <span class="manage__dasboard-show-item-name"><?= $value['name'] ?></span>
-                                            </div>
-                                            <div class="col col-2"><?= $value['description'] ?></div>
-                                            <div class="col col-3"><?= $value['price'] ?></div>
-                                            <div class="col col-3"><?= $value['company_name'] ?></div>
-                                            <div class="col col-4">
-                                                <a href="update.php?id=<?= $value['id'] ?>" class="manage__dasboard-show-item-action">Cập nhật</a>
-                                                <a href="delete.php?id=<?= $value['id'] ?>" class="manage__dasboard-show-item-action">Xóa</a>
-                                            </div>
+                                            <div class="col col-2"><?= $value['name'] ?></div>
+                                            <div class="col col-1"><?= $value['price'] ?></div>
+                                            <div class="col col-1"><?= $value['quantity'] ?></div>
                                         </li>
+                                        <?php
+                                            $total_price += $value['price'] * $value['quantity'];
+                                        ?>
                                     <?php } ?>
+                                </ul>
+
+                                <ul class="manage__dasboard-show-list">
+                                    <li class="manage__dasboard-show-item-header">
+                                        <div class="">
+                                            Tổng tiền: <span style="font-size: 1.4rem; font-weight: 550; color: var(--primary-color);"><?=number_format($total_price)?>đ</span>
+                                        </div>
+                                        <a href="index.php" class="btn btn--primary">Quay lại</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
