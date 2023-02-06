@@ -13,14 +13,14 @@ if(isset($_COOKIE['remember'])) {
     if($num_rows == 1) {
         $result = mysqli_fetch_array($arr);
         //gán lại giá trị
-        $_SESSION['id']  = $result['id'];
-        $_SESSION['name']  = $result['name'];
+        $_SESSION['customer_id']  = $result['id'];
+        $_SESSION['customer_name']  = $result['name'];
     }
 }
 
 //trường hợp đã đăng nhập mà vào lại trang signin này 
 //thì điều hướng về trang người dùng luôn
-if(isset($_SESSION['id'])) {    
+if(isset($_SESSION['customer_id']) && $_SESSION['level'] == 2) {    
     header('Location: index.php');
     return 0;
 }

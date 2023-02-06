@@ -1,6 +1,5 @@
 <?php
 require('../check_admin_login.php');
-session_start();
 $name = addslashes($_POST['name']);
 $description = addslashes(nl2br($_POST['description']));
 $photo = $_FILES['photo']; //trả về một arr

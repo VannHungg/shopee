@@ -22,7 +22,6 @@ require('../check_admin_login.php');
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
 </head>
 
-
 <body>
     <?php
     session_start();

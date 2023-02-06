@@ -1,5 +1,4 @@
 <?php
-session_start();
 require('../../connect.php');
 require('../check_admin_login.php');
 

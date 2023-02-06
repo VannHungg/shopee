@@ -1,5 +1,8 @@
 <?php
 require('../check_admin_login.php');
+if (!isset($_SESSION['page_products'])) {
+    $_SESSION['page_products'] = 1;
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,14 +28,7 @@ require('../check_admin_login.php');
 
 <body>
     <?php
-    session_start();
     require('../../connect.php');
-
-    $sql = "SELECT products.*, companies.name as company_name
-            FROM
-            products JOIN companies
-            ON products.company_id = companies.id";
-    $results = mysqli_query($connect, $sql);
     ?>
     <div class="app">
         <?php
@@ -83,6 +79,42 @@ require('../check_admin_login.php');
                                 </div>
 
                                 <a href="insert.php" class="manage__dasboard-nav--insert">Thêm sản phẩm</a>
+
+
+                                <?php
+                                $sql_num_products = "SELECT count(*) FROM products";
+                                $arr_num_products = mysqli_query($connect, $sql_num_products);
+                                $num_products = mysqli_fetch_array($arr_num_products)['count(*)'];
+
+                                $num_products_per_page = 4;
+                                $num_page = ceil($num_products / $num_products_per_page);
+
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                $product_skip = ($page - 1) * $num_products_per_page;
+
+                                $sql = "SELECT products.*, companies.name as company_name
+                                        FROM
+                                        products JOIN companies
+                                        ON products.company_id = companies.id
+                                        LIMIT $num_products_per_page OFFSET $product_skip";
+                                $results = mysqli_query($connect, $sql);
+                                ?>
+
+                                <div class="home-filter__page">
+                                    <span class="home-filter__page-num">
+                                        <span class="home-filter__page-current"><?= $_SESSION['page_products']; ?>
+                                        </span>/<?= $num_page; ?>
+                                    </span>
+
+                                    <div style="margin-right: 16px;" class="home-filter__page-control">
+                                        <a href="update_page.php?type=before" style="background-color: #e7e7e7;" class="home-filter__page-btn">
+                                            <i class="home-filter__page-icon fa-solid fa-angle-left"></i>
+                                        </a>
+                                        <a href="update_page.php?type=after&num_page=<?=$num_page?>" style="background-color: #e7e7e7;" class="home-filter__page-btn">
+                                            <i class="home-filter__page-icon fa-solid fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="manage__dasboard-show">

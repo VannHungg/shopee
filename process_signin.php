@@ -21,8 +21,9 @@ $number_rows = mysqli_num_rows($arr);
 if ($number_rows == 1) {
     $user = mysqli_fetch_array($arr);
     $id = $user['id'];
-    $_SESSION['id']  = $id;
-    $_SESSION['name']  = $user['name'];
+    $_SESSION['customer_id']  = $id;
+    $_SESSION['customer_name']  = $user['name'];
+    $_SESSION['level'] = 2;
 
     if($remember) {
         $token = uniqid('user_', true);

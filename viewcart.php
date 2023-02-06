@@ -4,6 +4,10 @@ if (isset($_SESSION['cart'])) {
     $cart = $_SESSION['cart'];
     $sum = 0;
 }
+
+if (!isset($_SESSION['history_search'])) {
+    $_SESSION['history_search'] = array();
+}
 // if (!isset($_SESSION['id'])) {
 //     $_SESSION['status'] = "fail";
 //     $_SESSION['message'] = "Bạn cần đăng nhập vào tài khoản";
@@ -119,20 +123,20 @@ if (isset($_SESSION['cart'])) {
                                 Trợ giúp
                             </a>
                         </li>
-                        <?php if (!isset($_SESSION['id'])) { ?>
+                        <?php if (!isset($_SESSION['customer_id'])) { ?>
                             <a href="signup.php" class="header__navbar-item header__navbar-item--strong header__navbar-item--separate">Đăng ký</a>
                             <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
                         <?php } else { ?>
                             <li class="header__navbar-item header__navbar-user">
                                 <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
-                                <span class="header__navbar-user-name"><?= $_SESSION['name']; ?></span>
+                                <span class="header__navbar-user-name"><?= $_SESSION['customer_name']; ?></span>
 
                                 <ul class="header__navbar-user-menu">
                                     <li class="header__navbar-user-item">
-                                        <a href="">Tài khoản của tôi</a>
+                                        <a href="profile.php">Tài khoản của tôi</a>
                                     </li>
                                     <li class="header__navbar-user-item">
-                                        <a href="">Đơn mua</a>
+                                        <a href="purchase.php">Đơn mua</a>
                                     </li>
                                     <li class="header__navbar-user-item">
                                         <a href="signout.php">Đăng xuất</a>
@@ -162,26 +166,38 @@ if (isset($_SESSION['cart'])) {
                             <span class="header__navbar-path--add-name-page color--primary mrl8">Giỏ Hàng</span>
                         </div>
 
-                        <form action="search.php" method="get" class="header__search border--primary">
+                        <form action="history_search.php" method="get" class="header__search border--primary">
                             <div class="header__search-input-wrap">
                                 <input id="parentMenu" autocomplete="off" type="text" name="search" class="header__search-input" placeholder="Freeship 0Đ !!">
 
                                 <!-- Search history  -->
-                                <div class="header__search-history" id="parentList">
-                                    <h3 class="header__search-history-heading">Lịch sử tìm kiếm</h3>
+                                <?php if (!empty($_SESSION['history_search'])) { ?>
+                                    <div class="header__search-history" id="parentList">
+                                        <h3 class="header__search-history-heading">Lịch sử tìm kiếm</h3>
 
-                                    <ul class="header__search-history-list">
-                                        <li class="header__search-history-item">
-                                            <a href="search.php?search=conan">Conan</a>
-                                        </li>
-                                        <li class="header__search-history-item">
-                                            <a href="search.php?search=naruto">Naruto</a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        <ul class="header__search-history-list">
+                                            <?php
+                                            if (count(($_SESSION['history_search'])) >= 3) {
+                                                for ($i = (count($_SESSION['history_search']) - 1); $i >= (count($_SESSION['history_search']) - 3); $i--) { ?>
+                                                    <li class="header__search-history-item">
+                                                        <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
+                                                    </li>
+                                                <?php
+                                                }
+                                            } else {
+                                                for ($i = (count($_SESSION['history_search']) - 1); $i >= 0; $i--) { ?>
+                                                    <li class="header__search-history-item">
+                                                        <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
+                                                    </li>
+
+                                            <?php }
+                                            } ?>
+                                        </ul>
+                                    </div>
+                                <?php } ?>
                             </div>
 
-                            <button class="header__search-btn">
+                            <button style="margin-right: 0;" class="header__search-btn">
                                 <i class="header__search-btn-icon fa-solid fa-magnifying-glass"></i>
                             </button>
                         </form>
@@ -243,13 +259,13 @@ if (isset($_SESSION['cart'])) {
                                 </div>
                             </form>
 
-                            <?php 
-                                require('connect.php');
-                                $id = $_SESSION['id'];
+                            <?php
+                            require('connect.php');
+                            $id = $_SESSION['customer_id'];
 
-                                $sql = "SELECT *FROM customers WHERE id = '$id'";
-                                $arr = mysqli_query($connect, $sql);
-                                $result = mysqli_fetch_array($arr);
+                            $sql = "SELECT *FROM customers WHERE id = '$id'";
+                            $arr = mysqli_query($connect, $sql);
+                            $result = mysqli_fetch_array($arr);
                             ?>
 
                             <form action="process_checkout.php" method="post" class="app__content-payment">
@@ -262,17 +278,17 @@ if (isset($_SESSION['cart'])) {
                                         <div class="auth-form__form">
                                             <div class="auth-form__group">
                                                 <span class="auth-form__group-title">Tên: </span>
-                                                <input type="text" name="customer_name" class="auth-form__input" value="<?=$result['name']?>">
+                                                <input type="text" name="customer_name" class="auth-form__input" value="<?= $result['name'] ?>">
                                             </div>
 
                                             <div class="auth-form__group">
                                                 <span class="auth-form__group-title">Sđt: </span>
-                                                <input type="text" name="customer_phone" class="auth-form__input" value="<?=$result['phone']?>">
+                                                <input type="text" name="customer_phone" class="auth-form__input" value="<?= $result['phone'] ?>">
                                             </div>
 
                                             <div class="auth-form__group">
                                                 <span class="auth-form__group-title">Địa chỉ: </span>
-                                                <input type="text" name="customer_address" class="auth-form__input" value="<?=$result['address']?>">
+                                                <input type="text" name="customer_address" class="auth-form__input" value="<?= $result['address'] ?>">
                                             </div>
                                         </div>
                                     </div>

@@ -24,15 +24,14 @@ require('../check_super_admin_login.php');
 
 <body>
     <?php
-    session_start();
     require('../../connect.php');
-
-    $sql = "SELECT *FROM companies";
-    $results = mysqli_query($connect, $sql);
     ?>
     <div class="app">
         <?php
         include "../header.php";
+        if (!isset($_SESSION['page_companies'])) {
+            $_SESSION['page_companies'] = 1;
+        }
         ?>
 
         <div class="app__container">
@@ -74,6 +73,39 @@ require('../check_super_admin_login.php');
                                 </div>
 
                                 <a href="insert.php" class="manage__dasboard-nav--insert">Thêm nhà sản xuất</a>
+
+                                <?php
+                                $sql_num_companies = "SELECT count(*) FROM companies";
+                                $arr_num_companies = mysqli_query($connect, $sql_num_companies);
+                                $num_companies = mysqli_fetch_array($arr_num_companies)['count(*)'];
+
+                                $num_companies_per_page = 4;
+                                $num_page = ceil($num_companies / $num_companies_per_page);
+
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                $company_skip = ($page - 1) * $num_companies_per_page;
+
+                                $sql = "SELECT *
+                                        FROM companies
+                                        LIMIT $num_companies_per_page OFFSET $company_skip";
+                                $results = mysqli_query($connect, $sql);
+                                ?>
+
+                                <div class="home-filter__page">
+                                    <span class="home-filter__page-num">
+                                        <span class="home-filter__page-current"><?= $_SESSION['page_companies']; ?>
+                                        </span>/<?= $num_page; ?>
+                                    </span>
+
+                                    <div style="margin-right: 16px;" class="home-filter__page-control">
+                                        <a href="update_page.php?type=before" style="background-color: #e7e7e7;" class="home-filter__page-btn">
+                                            <i class="home-filter__page-icon fa-solid fa-angle-left"></i>
+                                        </a>
+                                        <a href="update_page.php?type=after&num_page=<?=$num_page?>" style="background-color: #e7e7e7;" class="home-filter__page-btn">
+                                            <i class="home-filter__page-icon fa-solid fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="manage__dasboard-show">

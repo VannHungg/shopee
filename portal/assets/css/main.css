@@ -437,7 +437,7 @@
 
 .app__content-product {
     margin-left: calc(16.6667%);
-    height: 3000px;
+    min-height: 3000px;
     background-color: var(--background-color);
     padding: 10px 90px;
 }
@@ -508,6 +508,7 @@
     background-color: var(--white-color);
     border-radius: 2px;
     box-shadow: 0 1px 5px #d0d0d0;
+    padding-bottom: 15px;
 }
 
 .manage__dasboard-nav {
@@ -583,10 +584,59 @@
     margin-left: 4px;
 }
 
+/*////////////////*/
+.home-filter__page {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.home-filter__label {
+    font-size: 1.4rem;
+    color: #555;
+    margin-right: 16px;
+}
+
+.home-filter__btn {
+    margin-right: 12px;
+    min-width: 90px;
+}
+
+.home-filter__page-num {
+    font-size: 1.4rem;
+    color: var(--text-color);
+    margin-right: 22px;
+}
+
+.home-filter__page-current {
+    color: var(--primary-color);
+    font-weight: 450;
+}
+
+.home-filter__page-control {
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.home-filter__page-btn {
+    display: inline-block;
+    width: 34px;
+    height: 30px;
+    background-color: var(--text-color);
+    display: inline-flex;
+    text-decoration: none;
+}
+
+.home-filter__page-icon {
+    margin: auto;
+    font-size: 1.3rem;
+    color: #555;
+}
+
 /*show product*/
 .manage__dasboard-show {
     max-width: 1000px;
-    margin: 15px auto 20px;
+    margin: 15px auto 0px;
     border-radius: 4px;
 }
 
