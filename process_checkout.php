@@ -13,13 +13,14 @@ foreach ($cart as $each) {
     $total_price += $each['quantity'] * $each['price'];
 }
 
-$customer_id = $_SESSION['id'];
+$customer_id = $_POST['customer_id'];
 $status = 0; //mới đặt
 
 $sql = "INSERT INTO bill(customer_id, status, customer_name,
                          customer_phone, customer_address, total_price)
         VALUES ('$customer_id', '$status', '$customer_name',
                 '$customer_phone', '$customer_address', '$total_price')";
+
 mysqli_query($connect, $sql);
 
 $sql = "SELECT max(id) FROM bill WHERE customer_id = '$customer_id'";

@@ -23,14 +23,13 @@ function email($email, $name, $subject, $body) {
         $mail->SMTPSecure = 'tls';  // for encrypted connection                           
         $mail->Port = 587;   // port for SMTP  
     
-        $mail->setFrom('mychanneltorelax@gmail.com', "DEK Technologies"); // sender's email and name
+        $mail->setFrom('mychanneltorelax@gmail.com', "Shopee"); // sender's email and name
         $mail->addAddress($email, $name);  // receiver's email and name
     
         // $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $body;
         $mail->send();
-        echo 'Message has been sent';
     } catch (Exception $e) { // handle error.
         echo 'Message could not be sent. Mailer Error: ', $mail->ErrorInfo;
     }

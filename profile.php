@@ -44,14 +44,22 @@ if (!isset($_SESSION['history_search'])) {
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
 </head>
 
 <body>
     <?php
     require('connect.php');
 
+    $customer_id = $_SESSION['customer_id'];
+
     $sql = "SELECT * FROM products";
     $results = mysqli_query($connect, $sql);
+
+    $sql_customer = "SELECT *FROM customers WHERE id='$customer_id'";
+    $arr_customer = mysqli_query($connect, $sql_customer);
+    $result_customer = mysqli_fetch_array($arr_customer);
+    $customer_email = $result_customer['email'];
     ?>
 
     <div class="app">
@@ -147,7 +155,7 @@ if (!isset($_SESSION['history_search'])) {
                             <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
                         <?php } else { ?>
                             <li class="header__navbar-item header__navbar-user">
-                                <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
+                                <img src="photos/<?= $_SESSION['customer_photo'] ?>" alt="ảnh đại diện" class="header__navbar-user-img">
                                 <span class="header__navbar-user-name"><?= $_SESSION['customer_name']; ?></span>
 
                                 <ul class="header__navbar-user-menu">
@@ -198,7 +206,7 @@ if (!isset($_SESSION['history_search'])) {
 
                     <form action="history_search.php" method="get" class="header__search">
                         <div class="header__search-input-wrap">
-                            <input id="parentMenu" autocomplete="off" type="text" name="search" class="header__search-input" placeholder="Tìm kiếm trong shop">
+                            <input id="parentMenu" autocomplete="off" type="text" name="search" style="border: none;" class="header__search-input" placeholder="Tìm kiếm trong shop">
 
                             <!-- Search history  -->
                             <?php if (!empty($_SESSION['history_search'])) { ?>
@@ -212,17 +220,16 @@ if (!isset($_SESSION['history_search'])) {
                                                 <li class="header__search-history-item">
                                                     <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
                                                 </li>
-                                        <?php
+                                            <?php
                                             }
-                                        }
-                                        else { 
+                                        } else {
                                             for ($i = (count($_SESSION['history_search']) - 1); $i >= 0; $i--) { ?>
                                                 <li class="header__search-history-item">
                                                     <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
-                                                </li>    
+                                                </li>
 
                                         <?php }
-                                        }?>
+                                        } ?>
                                     </ul>
                                 </div>
                             <?php } ?>
@@ -309,159 +316,144 @@ if (!isset($_SESSION['history_search'])) {
             <div class="grid">
                 <div class="grid__row app__content">
                     <div class="grid__column-2">
-                        <nav class="category">
-                            <h3 class="category__heading">
-                                <i class="category__heading-icon fa-solid fa-list"></i>
-                                Danh mục
-                            </h3>
+                        <nav style="background-color: #f5f5f5;" class="category">
+                            <div class="category__heading">
+                                <img class="category__heading-user-img header__navbar-user-img header__navbar-user-img--change-border" src="photos/<?= $_SESSION['customer_photo'] ?>" alt="">
+
+                                <div class="category__heading-user">
+                                    <h3 class="category__heading-username"><?= $_SESSION['customer_name']; ?></h3>
+                                    <a href="profile.php" class="category__heading-user--update">
+                                        <i style="font-size: 1.3rem;" class="fa-solid fa-pencil"></i>
+                                        <span class="category__heading-user--update-link">Sửa hồ sơ</span>
+                                    </a>
+                                </div>
+                            </div>
                             <ul class="category-list">
+                                <!-- category-item--active -->
                                 <li class="category-item category-item--active">
-                                    <a href="#" class="category-item__link">Sản phẩm</a>
+                                    <a href="profile.php" class="category-item__link">
+                                        <i class="category-item__link-icon fa-regular fa-user"></i>
+                                        Tài khoản của tôi
+                                    </a>
                                 </li>
                                 <li class="category-item">
-                                    <a href="#" class="category-item__link">Happy Halloween</a>
+                                    <a href="purchase.php" class="category-item__link">
+                                        <i class="category-item__link-icon fa-regular fa-rectangle-list"></i>
+                                        Đơn mua
+                                    </a>
                                 </li>
                                 <li class="category-item">
-                                    <a href="#" class="category-item__link">Manga - Comic</a>
+                                    <a href="#" class="category-item__link">
+                                        <i class="category-item__link-icon fa-regular fa-bell"></i>
+                                        Thông báo
+                                    </a>
                                 </li>
                                 <li class="category-item">
-                                    <a href="#" class="category-item__link">Kiến thức - Khoa học</a>
+                                    <a href="#" class="category-item__link">
+                                        <i class="category-item__link-icon fa-solid fa-tag"></i>
+                                        Kho voucher
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
                     </div>
 
                     <div class="grid__column-10">
-                        <div class="home-filter">
-                            <span class="home-filter__label">Sắp xếp theo</span>
-                            <button class="home-filter__btn btn">Phổ biến</button>
-                            <button class="home-filter__btn btn btn--primary">Mới nhất</button>
-                            <button class="home-filter__btn btn">Bán chạy</button>
-
-                            <div class="select-input">
-                                <span class="select-input__label">Giá</span>
-                                <i class="select-input__icon fa-solid fa-angle-down"></i>
-
-                                <ul class="select-input__list">
-                                    <li class="select-input__item">
-                                        <a href="" class="select-input__link">Giá: thấp đến cao</a>
-                                    </li>
-                                    <li class="select-input__item">
-                                        <a href="" class="select-input__link">Giá: cao đến thấp</a>
-                                    </li>
-                                </ul>
+                        <div class="profile-update">
+                            <div class="profile-update__header">
+                                <span class="profile-update__header-title">Hồ sơ của tôi</span>
+                                <span class="profile-update__header-detail">Quản lý thông tin hồ sơ để bảo mật tài khoản</span>
                             </div>
 
-                            <div class="home-filter__page">
-                                <span class="home-filter__page-num">
-                                    <span class="home-filter__page-current">1</span>/14
-                                </span>
+                            <?php
+                            function addDotToEmail($email)
+                            {
+                                $email_name = explode("@", $email)[0];
+                                $email_extension = explode("@", $email)[1];
+                                $len_extension = strlen($email_extension);
+                                $len_email = strlen($email);
+                                $len_name = $len_email - $len_extension - 1; // trừ ra @
 
-                                <div class="home-filter__page-control">
-                                    <a href="" class="home-filter__page-btn">
-                                        <i class="home-filter__page-icon fa-solid fa-angle-left"></i>
-                                    </a>
-                                    <a href="" class="home-filter__page-btn">
-                                        <i class="home-filter__page-icon fa-solid fa-angle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                                if ($len_name < 3) {
+                                    for ($i = 0; $i < 6; $i++) {
+                                        $email_name = substr_replace($email_name, '*', $len_name, 0);
+                                        $len_name += 1;
+                                    }
+                                } else {
+                                    for ($i = 2; $i < $len_name; $i++) {
+                                        $email_name[$i] = "*";
+                                    }
+                                }
+                                $new_email = $email_name . '@' . $email_extension;
+                                return $new_email;
+                            }
+                            ?>
 
-                        <div class="home-product">
-                            <div class="grid__row">
-                                <!-- product item -->
-                                <?php foreach ($results as $value) { ?>
-                                    <div class="grid__column-2-4">
-                                        <div class="home-product-item">
-                                            <div class="home-product-item__img" style="background-image: url(photos/<?= $value['photo'] ?>"></div>
-                                            <h4 class="home-product-item__name"><?= $value['name'] ?></h4>
-                                            <div class="home-product-item__price">
-                                                <?php if ($value['discount'] > 0) { ?>
-                                                    <div class="home-product-item__pri">
-                                                        <span class="home-product-item__price-old"><?= number_format($value['price']) ?>đ</span>
-                                                        <span class="home-product-item__price-new"><?= number_format($value['price'] * (1 - $value['discount'] / 100)) ?>đ</span>
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <div class="home-product-item__pri">
-                                                        <span style="text-decoration: none; color: #ee4d2d;" class="home-product-item__price-old"><?= number_format($value['price']) ?>đ</span>
-                                                    </div>
-                                                <?php } ?>
-
-                                                <svg height="12" viewBox="0 0 20 12" width="20" class="home-product-item__icon-free-shipping">
-                                                    <g fill="none" fill-rule="evenodd" transform="">
-                                                        <rect fill="#00bfa5" fill-rule="evenodd" height="9" rx="1" width="12" x="4"></rect>
-                                                        <rect height="8" rx="1" stroke="#00bfa5" width="11" x="4.5" y=".5">
-                                                        </rect>
-                                                        <rect fill="#00bfa5" fill-rule="evenodd" height="7" rx="1" width="7" x="13" y="2"></rect>
-                                                        <rect height="6" rx="1" stroke="#00bfa5" width="6" x="13.5" y="2.5">
-                                                        </rect>
-                                                        <circle cx="8" cy="10" fill="#00bfa5" r="2"></circle>
-                                                        <circle cx="15" cy="10" fill="#00bfa5" r="2"></circle>
-                                                        <path d="m6.7082481 6.7999878h-.7082481v-4.2275391h2.8488017v.5976563h-2.1405536v1.2978515h1.9603297v.5800782h-1.9603297zm2.6762505 0v-3.1904297h.6544972v.4892578h.0505892c.0980164-.3134765.4774351-.5419922.9264138-.5419922.0980165 0 .2276512.0087891.3003731.0263672v.6210938c-.053751-.0175782-.2624312-.038086-.3762568-.038086-.5122152 0-.8758247.3017578-.8758247.75v1.8837891zm3.608988-2.7158203c-.5027297 0-.8536919.328125-.8916338.8261719h1.7390022c-.0158092-.5009766-.3446386-.8261719-.8473684-.8261719zm.8442065 1.8544922h.6544972c-.1549293.571289-.7050863.9228515-1.49238.9228515-.9864885 0-1.5903965-.6269531-1.5903965-1.6464843 0-1.0195313.6165553-1.6669922 1.5872347-1.6669922.9580321 0 1.5366455.6064453 1.5366455 1.6083984v.2197266h-2.4314412v.0351562c.0221328.5595703.373095.9140625.9169284.9140625.4110369 0 .6924391-.1376953.8189119-.3867187zm2.6224996-1.8544922c-.5027297 0-.853692.328125-.8916339.8261719h1.7390022c-.0158091-.5009766-.3446386-.8261719-.8473683-.8261719zm.8442064 1.8544922h.6544972c-.1549293.571289-.7050863.9228515-1.49238.9228515-.9864885 0-1.5903965-.6269531-1.5903965-1.6464843 0-1.0195313.6165553-1.6669922 1.5872347-1.6669922.9580321 0 1.5366455.6064453 1.5366455 1.6083984v.2197266h-2.4314412v.0351562c.0221328.5595703.373095.9140625.9169284.9140625.4110369 0 .6924391-.1376953.8189119-.3867187z" fill="#fff"></path>
-                                                        <path d="m .5 8.5h3.5v1h-3.5z" fill="#00bfa5"></path>
-                                                        <path d="m0 10.15674h3.5v1h-3.5z" fill="#00bfa5"></path>
-                                                        <circle cx="8" cy="10" fill="#047565" r="1"></circle>
-                                                        <circle cx="15" cy="10" fill="#047565" r="1"></circle>
-                                                    </g>
-                                                </svg>
-                                            </div>
-                                            <div class="home-product-item__action">
-                                                <div class="home-product-item__num-product-present">
-                                                    <i class="fa-solid fa-check"></i>
-                                                    <span class="home-product-item__num-product-title">100 sản phẩm có sẵn</span>
-                                                </div>
-                                                <div class="home-product-item__rating">
-                                                    <!-- home-product-item__star--gold -->
-                                                    <div class="home-product-item__star-wrap">
-                                                        <i class="fa-solid fa-star home-product-item__star home-product-item__star--gold"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star home-product-item__star--gold"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <span class="home-product-item__sold">Đã bán 9,6k</span>
-                                                    </div>
-                                                    <?php if (isset($_SESSION['customer_id'])) { ?>
-                                                        <a href="add_to_cart.php?id=<?= $value['id'] ?>&page=<?= $page; ?>" class="home-product-item__like home-product-item__like--liked">
-                                                            <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
-                                                            <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
-                                                        </a>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                            <div class="home-product-item__favourite">
-                                                <i class="fa-solid fa-check"></i>
-                                                <span>Yêu thích</span>
-                                            </div>
-                                            <div class="home-product-item__sale-off">
-                                                <span class="home-product-item__sale-off-percent"><?= $value['discount'] ?>%</span>
-                                                <span class="home-product-item__sale-off-label">GIẢM</span>
+                            <form class="profile-update__form" action="process_update_profile.php" method="post" enctype="multipart/form-data">
+                                <div class="profile-update__form-info">
+                                    <input type="hidden" name="customer_id" value="<?= $customer_id ?>">
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title">Tên</span>
+                                        <input type="text" class="profile-update__form-detail" name="customer_name" value="<?= $result_customer['name'] ?>"></input>
+                                    </div>
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title">Email</span>
+                                        <div class="profile-update__form-input">
+                                            <div class="profile-update__form-input-wrap">
+                                                <span class="profile-update__form-old-input"><?= addDotToEmail($result_customer['email']); ?></span>
+                                                <input type="hidden" name="customer_email" value="<?= $result_customer['email'] ?>"></input>
+                                                <button class="profile-update__form-btn--add">Thay đổi</button>
                                             </div>
                                         </div>
                                     </div>
-                                <?php } ?>
-                            </div>
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title">Số điện thoại</span>
+                                        <input type="text" class="profile-update__form-detail" name="customer_phone" value="<?= $result_customer['phone'] ?>"></input>
+                                    </div>
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title">Giới tính</span>
+                                        <div class="auth-form__input-gender-group">
+                                            <input type="radio" id="male" name="customer_gender" class="auth-form__input-radio" value="Nam" <?php if ($result_customer['gender'] == "Nam") { ?> checked <?php } ?>>
+                                            <label style="font-size: 1.3rem;" for="male">Nam</label>
+                                        </div>
+
+                                        <div class="auth-form__input-gender-group">
+                                            <input type="radio" id="female" name="customer_gender" class="auth-form__input-radio" value="Nữ" <?php if ($result_customer['gender'] == "Nữ") { ?> checked <?php } ?>>
+                                            <label style="font-size: 1.3rem;" for="female">Nữ</label>
+                                        </div>
+                                    </div>
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title">Ngày sinh</span>
+                                        <input id="date" type="date" name="customer_dateofbirth" class="auth-form__input-birth" value="<?= $result_customer['birthday'] ?>" />
+                                    </div>
+
+                                    <div class="profile-update__form-wrap">
+                                        <span class="profile-update__form-title"></span>
+                                        <input type="submit" class="btn btn--primary profile-update__form-submit" value="Lưu">
+                                    </div>
+
+                                </div>
+
+                                <div class="profile-update__form-photo">
+                                    <div class="profile-update__form-old-photo">
+                                        <img src="./photos/<?php if ($result_customer['photo'] != '') {
+                                                                echo $result_customer['photo'];
+                                                            } else {
+                                                                echo "default.jpg";
+                                                            } ?>" class="profile-update__form-old-photo-img" alt="ảnh đại diện cũ">
+                                        <input type="hidden" name="customer_old_photo" value="<?php if ($result_customer['photo'] != '') {
+                                                                                                    echo $result_customer['photo'];
+                                                                                                } else {
+                                                                                                    echo "default.jpg";
+                                                                                                } ?>">
+                                    </div>
+
+                                    <div class="profile-update__form-new-photo">
+                                        <input type="file" name="customer_new_photo" class="form-container__crud-input">
+                                    </div>
+                                </div>
+                            </form>
                         </div>
-
-                        <ul class="pagination pagination--margin">
-                            <li class="pagination-item">
-                                <a href="#" class="pagination-item__link">
-                                    <i class="pagination-item__icon fas fa-angle-left"></i>
-                                </a>
-                            </li>
-
-                            <?php for ($i = 1; $i <= $num_page; $i++) { ?>
-                                <li class="pagination-item">
-                                    <a href="?page=<?= $i ?>&search=<?= $search ?>" class="pagination-item__link"><?= $i ?></a>
-                                </li>
-                            <?php } ?>
-
-                            <li class="pagination-item">
-                                <a href="#" class="pagination-item__link">
-                                    <i class="pagination-item__icon fas fa-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -487,6 +479,24 @@ if (!isset($_SESSION['history_search'])) {
             list.style.display = 'block';
         }
     };
+
+    $(document).ready(function() {
+        $(".profile-update__form-btn--add").click(function() {
+            $add = `<input autocomplete="off" type="text" class="profile-update__form-detail" name="customer_email" required value="<?= $result_customer['email'] ?>"></input>
+                    <button class="profile-update__form-btn--remove">Hủy</button>`;
+            $(".profile-update__form-input-wrap").empty();
+            $(".profile-update__form-input-wrap").append($add);
+        });
+
+        $(".profile-update__form-btn--remove").click(function() {
+            $(".profile-update__form-input-wrap").empty();
+            $(".profile-update__form-input-wrap").append(`
+            <span class="profile-update__form-old-input"><?= addDotToEmail($result_customer['email']); ?></span>
+            <input type="hidden" name="customer_email" value="<?= $result_customer['email'] ?>"></input>
+            <button class="profile-update__form-btn--add">Thay đổi</button>
+            `);
+        });
+    });
 </script>
 
 </html>

@@ -41,6 +41,7 @@ if (!isset($_SESSION['history_search'])) {
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
     <link rel="stylesheet" href="./fonts/fontawesome-free-6.1.2-web/css/all.min.css">
+    <link rel="stylesheet" href="./fonts/themify-icons/themify-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
@@ -147,7 +148,7 @@ if (!isset($_SESSION['history_search'])) {
                             <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
                         <?php } else { ?>
                             <li class="header__navbar-item header__navbar-user">
-                                <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
+                                <img src="photos/<?= $_SESSION['customer_photo'] ?>" alt="ảnh đại diện" class="header__navbar-user-img">
                                 <span class="header__navbar-user-name"><?= $_SESSION['customer_name']; ?></span>
 
                                 <ul class="header__navbar-user-menu">
@@ -304,13 +305,31 @@ if (!isset($_SESSION['history_search'])) {
         <?php
         require('./portal/alert.php');
         ?>
+
+        <?php
+        $customer_id = $_SESSION['customer_id'];
+
+        $sql_purchase = "SELECT *FROM companies JOIN
+        (SELECT products.photo as products_photo, products.name as products_name,
+               products.price as products_price, products.discount as products_discount,
+                products.company_id as products_company_id, temp_2.*
+        FROM products JOIN
+        (SELECT * FROM bill_product JOIN
+        (SELECT * FROM bill 
+        WHERE customer_id='$customer_id') as temp_1
+        ON bill_product.bill_id=temp_1.id) as temp_2
+        ON products.id=temp_2.product_id) as temp_3
+        ON temp_3.products_company_id=companies.id";
+
+        $arr_purchase = mysqli_query($connect, $sql_purchase);
+        ?>
         <div class="app__container">
             <div class="grid">
                 <div class="grid__row app__content">
                     <div class="grid__column-2">
                         <nav style="background-color: #f5f5f5;" class="category">
                             <div class="category__heading">
-                                <img class="category__heading-user-img header__navbar-user-img" src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="">
+                                <img class="category__heading-user-img header__navbar-user-img header__navbar-user-img--change-border" src="photos/<?= $_SESSION['customer_photo'] ?>" alt="">
 
                                 <div class="category__heading-user">
                                     <h3 class="category__heading-username"><?= $_SESSION['customer_name']; ?></h3>
@@ -328,8 +347,8 @@ if (!isset($_SESSION['history_search'])) {
                                         Tài khoản của tôi
                                     </a>
                                 </li>
-                                <li class="category-item">
-                                    <a href="#" class="category-item__link">
+                                <li class="category-item category-item--active">
+                                    <a href="purchase.php" class="category-item__link">
                                         <i class="category-item__link-icon fa-regular fa-rectangle-list"></i>
                                         Đơn mua
                                     </a>
@@ -351,136 +370,154 @@ if (!isset($_SESSION['history_search'])) {
                     </div>
 
                     <div class="grid__column-10">
-                        <div class="home-filter">
-                            <span class="home-filter__label">Sắp xếp theo</span>
-                            <button class="home-filter__btn btn">Phổ biến</button>
-                            <button class="home-filter__btn btn btn--primary">Mới nhất</button>
-                            <button class="home-filter__btn btn">Bán chạy</button>
+                        <div class="purchase-sidebar">
+                            <?php
+                            if (isset($_GET['type'])) {
+                                $type = $_GET['type'];
+                            } else {
+                                $type = 1;
+                            }
+                            ?>
 
-                            <div class="select-input">
-                                <span class="select-input__label">Giá</span>
-                                <i class="select-input__icon fa-solid fa-angle-down"></i>
+                            <a href="purchase.php?type=1" class="purchase-sidebar__item 
+                                <?php if ($type == 1) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Tất cả</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
 
-                                <ul class="select-input__list">
-                                    <li class="select-input__item">
-                                        <a href="" class="select-input__link">Giá: thấp đến cao</a>
-                                    </li>
-                                    <li class="select-input__item">
-                                        <a href="" class="select-input__link">Giá: cao đến thấp</a>
-                                    </li>
-                                </ul>
-                            </div>
+                            <a href="purchase.php?type=2" class="purchase-sidebar__item
+                                <?php if ($type == 2) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Chờ thanh toán</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
 
-                            <div class="home-filter__page">
-                                <span class="home-filter__page-num">
-                                    <span class="home-filter__page-current">1</span>/14
-                                </span>
+                            <a href="purchase.php?type=3" class="purchase-sidebar__item
+                                <?php if ($type == 3) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Vận chuyển</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
 
-                                <div class="home-filter__page-control">
-                                    <a href="" class="home-filter__page-btn">
-                                        <i class="home-filter__page-icon fa-solid fa-angle-left"></i>
-                                    </a>
-                                    <a href="" class="home-filter__page-btn">
-                                        <i class="home-filter__page-icon fa-solid fa-angle-right"></i>
-                                    </a>
-                                </div>
-                            </div>
+                            <a href="purchase.php?type=4" class="purchase-sidebar__item
+                                <?php if ($type == 4) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Đang giao</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
+
+                            <a href="purchase.php?type=5" class="purchase-sidebar__item
+                                <?php if ($type == 5) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Hoàn thành</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
+
+                            <a href="purchase.php?type=6" class="purchase-sidebar__item
+                                <?php if ($type == 6) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Đã hủy</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
+
+                            <a href="purchase.php?type=7" class="purchase-sidebar__item
+                                <?php if ($type == 7) { ?> purchase-sidebar__item--selected <?php } ?>">
+                                <span class="purchase-sidebar__item-content">Trả hàng/Hoàn tiền</span>
+                                <span class="purchase-sidebar__item-amount"></span>
+                            </a>
                         </div>
 
-                        <div class="home-product">
-                            <div class="grid__row">
-                                <!-- product item -->
-                                <?php foreach ($results as $value) { ?>
-                                    <div class="grid__column-2-4">
-                                        <div class="home-product-item">
-                                            <div class="home-product-item__img" style="background-image: url(photos/<?= $value['photo'] ?>"></div>
-                                            <h4 class="home-product-item__name"><?= $value['name'] ?></h4>
-                                            <div class="home-product-item__price">
-                                                <?php if ($value['discount'] > 0) { ?>
-                                                    <div class="home-product-item__pri">
-                                                        <span class="home-product-item__price-old"><?= number_format($value['price']) ?>đ</span>
-                                                        <span class="home-product-item__price-new"><?= number_format($value['price'] * (1 - $value['discount'] / 100)) ?>đ</span>
-                                                    </div>
-                                                <?php } else { ?>
-                                                    <div class="home-product-item__pri">
-                                                        <span style="text-decoration: none; color: #ee4d2d;" class="home-product-item__price-old"><?= number_format($value['price']) ?>đ</span>
-                                                    </div>
-                                                <?php } ?>
+                        <div class="purchase-product__container">
+                            <!--item-->
+                            <?php
+                            $first_value = mysqli_fetch_array($arr_purchase);
+                            $products_company_id = $first_value['products_company_id'];
+                            $bill_id = $first_value['bill_id'];
+                            ?>
+                            <?php foreach ($arr_purchase as $value) { ?>
 
-                                                <svg height="12" viewBox="0 0 20 12" width="20" class="home-product-item__icon-free-shipping">
-                                                    <g fill="none" fill-rule="evenodd" transform="">
-                                                        <rect fill="#00bfa5" fill-rule="evenodd" height="9" rx="1" width="12" x="4"></rect>
-                                                        <rect height="8" rx="1" stroke="#00bfa5" width="11" x="4.5" y=".5">
-                                                        </rect>
-                                                        <rect fill="#00bfa5" fill-rule="evenodd" height="7" rx="1" width="7" x="13" y="2"></rect>
-                                                        <rect height="6" rx="1" stroke="#00bfa5" width="6" x="13.5" y="2.5">
-                                                        </rect>
-                                                        <circle cx="8" cy="10" fill="#00bfa5" r="2"></circle>
-                                                        <circle cx="15" cy="10" fill="#00bfa5" r="2"></circle>
-                                                        <path d="m6.7082481 6.7999878h-.7082481v-4.2275391h2.8488017v.5976563h-2.1405536v1.2978515h1.9603297v.5800782h-1.9603297zm2.6762505 0v-3.1904297h.6544972v.4892578h.0505892c.0980164-.3134765.4774351-.5419922.9264138-.5419922.0980165 0 .2276512.0087891.3003731.0263672v.6210938c-.053751-.0175782-.2624312-.038086-.3762568-.038086-.5122152 0-.8758247.3017578-.8758247.75v1.8837891zm3.608988-2.7158203c-.5027297 0-.8536919.328125-.8916338.8261719h1.7390022c-.0158092-.5009766-.3446386-.8261719-.8473684-.8261719zm.8442065 1.8544922h.6544972c-.1549293.571289-.7050863.9228515-1.49238.9228515-.9864885 0-1.5903965-.6269531-1.5903965-1.6464843 0-1.0195313.6165553-1.6669922 1.5872347-1.6669922.9580321 0 1.5366455.6064453 1.5366455 1.6083984v.2197266h-2.4314412v.0351562c.0221328.5595703.373095.9140625.9169284.9140625.4110369 0 .6924391-.1376953.8189119-.3867187zm2.6224996-1.8544922c-.5027297 0-.853692.328125-.8916339.8261719h1.7390022c-.0158091-.5009766-.3446386-.8261719-.8473683-.8261719zm.8442064 1.8544922h.6544972c-.1549293.571289-.7050863.9228515-1.49238.9228515-.9864885 0-1.5903965-.6269531-1.5903965-1.6464843 0-1.0195313.6165553-1.6669922 1.5872347-1.6669922.9580321 0 1.5366455.6064453 1.5366455 1.6083984v.2197266h-2.4314412v.0351562c.0221328.5595703.373095.9140625.9169284.9140625.4110369 0 .6924391-.1376953.8189119-.3867187z" fill="#fff"></path>
-                                                        <path d="m .5 8.5h3.5v1h-3.5z" fill="#00bfa5"></path>
-                                                        <path d="m0 10.15674h3.5v1h-3.5z" fill="#00bfa5"></path>
-                                                        <circle cx="8" cy="10" fill="#047565" r="1"></circle>
-                                                        <circle cx="15" cy="10" fill="#047565" r="1"></circle>
+                                <div class="purchase-product__item">
+                                    <div class="purchase-product">
+                                        <div class="purchase-product__header">
+                                            <div class="purchase-product__info-shop">
+                                                <i class="ti-home purchase-product__shop-icon"></i>
+                                                <span class="purchase-product__shop-name"><?= $value['name'] ?></span>
+                                                <button class="btn btn--primary btn__purchase-chat">
+                                                    <i class="ti-comment-alt"></i>
+                                                    <span>Chat</span>
+                                                </button>
+                                                <button class="btn btn--normal btn__purchase-chat btn__purchase-chat--has-border">
+                                                    <i class="ti-home"></i>
+                                                    <span>Xem shop</span>
+                                                </button>
+                                            </div>
+
+                                            <div class="purchase-product__status">
+                                                <svg enable-background="new 0 0 15 15" viewBox="0 0 15 15" x="0" y="0" class="shopee-svg-icon icon-free-shipping-line">
+                                                    <g>
+                                                        <line fill="none" stroke="#00BFA3" stroke-linejoin="round" stroke-miterlimit="10" x1="8.6" x2="4.2" y1="9.8" y2="9.8"></line>
+                                                        <circle cx="3" cy="11.2" fill="none" stroke="#00BFA3" r="2" stroke-miterlimit="10"></circle>
+                                                        <circle cx="10" cy="11.2" fill="none" stroke="#00BFA3" r="2" stroke-miterlimit="10"></circle>
+                                                        <line fill="none" fill="#00BFA3" stroke-miterlimit="10" x1="10.5" x2="14.4" y1="7.3" y2="7.3"></line>
+                                                        <polyline fill="none" stroke="#00BFA3" points="1.5 9.8 .5 9.8 .5 1.8 10 1.8 10 9.1" stroke-linejoin="round" stroke-miterlimit="10"></polyline>
+                                                        <polyline fill="none" stroke="#00BFA3" points="9.9 3.8 14 3.8 14.5 10.2 11.9 10.2" stroke-linejoin="round" stroke-miterlimit="10"></polyline>
                                                     </g>
                                                 </svg>
-                                            </div>
-                                            <div class="home-product-item__action">
-                                                <div class="home-product-item__num-product-present">
-                                                    <i class="fa-solid fa-check"></i>
-                                                    <span class="home-product-item__num-product-title">100 sản phẩm có sẵn</span>
-                                                </div>
-                                                <div class="home-product-item__rating">
-                                                    <!-- home-product-item__star--gold -->
-                                                    <div class="home-product-item__star-wrap">
-                                                        <i class="fa-solid fa-star home-product-item__star home-product-item__star--gold"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star home-product-item__star--gold"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <i class="fa-solid fa-star home-product-item__star"></i>
-                                                        <span class="home-product-item__sold">Đã bán 9,6k</span>
-                                                    </div>
-                                                    <?php if (isset($_SESSION['customer_id'])) { ?>
-                                                        <a href="add_to_cart.php?id=<?= $value['id'] ?>&page=<?= $page; ?>" class="home-product-item__like home-product-item__like--liked">
-                                                            <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
-                                                            <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
-                                                        </a>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                            <div class="home-product-item__favourite">
-                                                <i class="fa-solid fa-check"></i>
-                                                <span>Yêu thích</span>
-                                            </div>
-                                            <div class="home-product-item__sale-off">
-                                                <span class="home-product-item__sale-off-percent"><?= $value['discount'] ?>%</span>
-                                                <span class="home-product-item__sale-off-label">GIẢM</span>
+
+                                                <span class="purchase-product__status-delivery">
+                                                    <?php if ($value['status'] == 0) {
+                                                        echo "Đang giao cho đơn vị vận chuyển";
+                                                    } else if ($value['status'] == 1) {
+                                                        echo "Giao hàng thành công";
+                                                    } else if ($value['status'] == 2) {
+                                                        echo "Đơn hàng đã bị hủy";
+                                                    } ?>
+                                                </span>
+                                                <i class="ti-help-alt purchase-product__status-icon"></i>
+                                                <span class="purchase-product__status-status">
+                                                    <?php if ($value['status'] == 0) {
+                                                        echo "ĐANG DUYỆT";
+                                                    } else if ($value['status'] == 1) {
+                                                        echo "ĐÃ DUYỆT";
+                                                    } else if ($value['status'] == 2) {
+                                                        echo "ĐÃ HỦY";
+                                                    } ?>
+                                                </span>
                                             </div>
                                         </div>
+
+                                        <div class="purchase-product__detail-list">
+                                            <a href="" class="purchase-product__detail-item">
+                                                <img src="photos/<?= $value['products_photo'] ?>" class="purchase-product__detail-img" alt="ảnh sản phẩm">
+
+                                                <div class="purchase-product__detail-info">
+                                                    <h5 class="purchase-product__detail-name"><?= $value['products_name'] ?></h5>
+                                                    <span class="purchase-product__detail-description">Phân loại hàng: truyện ngắn</span>
+                                                    <span class="purchase-product__detail-quantity">x<?= $value['quantity'] ?></span>
+                                                </div>
+
+                                                <div class="purchase-product__detail-price">
+                                                    <span class="purchase-product__detail-price--no-discount"><?= number_format($value['products_price']) ?>đ</span>
+                                                    <span class="purchase-product__detail-price--has-discount">
+                                                        <?php $sum = $value['products_price'] * (100 - $value['products_discount']) / 100; ?>
+                                                        <?= number_format($value['products_price'] * (100 - $value['products_discount']) / 100) ?>đ
+                                                    </span>
+                                                </div>
+                                            </a>
+                                        </div>
                                     </div>
-                                <?php } ?>
-                            </div>
-                        </div>
 
-                        <ul class="pagination pagination--margin">
-                            <li class="pagination-item">
-                                <a href="#" class="pagination-item__link">
-                                    <i class="pagination-item__icon fas fa-angle-left"></i>
-                                </a>
-                            </li>
+                                    <div class="purchase-product__footer">
+                                        <div class="purchase-product__total">
+                                            <i class="ti-money purchase-product__total-icon"></i>
+                                            <span class="purchase-product__total-title">Thành tiền:</span>
+                                            <span class="purchase-product__total-price"><?= number_format($sum) ?>đ</span>
+                                        </div>
 
-                            <?php for ($i = 1; $i <= $num_page; $i++) { ?>
-                                <li class="pagination-item">
-                                    <a href="?page=<?= $i ?>&search=<?= $search ?>" class="pagination-item__link"><?= $i ?></a>
-                                </li>
+                                        <div class="purchase-product__option">
+                                            <button class="purchase-product__option--rebuy btn btn--primary">Mua lại</button>
+                                            <button class="purchase-product__option--contact btn btn--normal">Liên hệ người bán</button>
+                                            <button class="purchase-product__option--detail btn btn--normal">Chi tiết đơn hàng</button>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php } ?>
-
-                            <li class="pagination-item">
-                                <a href="#" class="pagination-item__link">
-                                    <i class="pagination-item__icon fas fa-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>

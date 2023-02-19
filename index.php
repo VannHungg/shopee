@@ -1,5 +1,6 @@
 <?php
 session_start();
+require('connect.php');
 
 // if (!isset($_SESSION['customer_id'])) {
 //     $_SESSION['status'] = "fail";
@@ -25,6 +26,22 @@ if (isset($_SESSION['cart'])) {
 if (!isset($_SESSION['history_search'])) {
     $_SESSION['history_search'] = array();
 }
+
+if (isset($_SESSION['customer_id'])) {
+    $customer_id = $_SESSION['customer_id'];
+    //lấy ảnh đại diện
+    $sql = "SELECT photo FROM customers
+            WHERE id = '$customer_id'";
+    $arr = mysqli_query($connect, $sql);
+    $customer_photo = mysqli_fetch_array($arr)['photo'];
+    if($customer_photo != '') {
+        $_SESSION['customer_photo'] = $customer_photo;
+    }
+    else {
+        $_SESSION['customer_photo'] = 'default.jpg';
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +65,6 @@ if (!isset($_SESSION['history_search'])) {
 
 <body>
     <?php
-    require('connect.php');
 
     $sql = "SELECT * FROM products";
     $results = mysqli_query($connect, $sql);
@@ -147,7 +163,7 @@ if (!isset($_SESSION['history_search'])) {
                             <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
                         <?php } else { ?>
                             <li class="header__navbar-item header__navbar-user">
-                                <img src="https://i.pinimg.com/564x/65/78/88/6578883b942837231e17823c903c47ae.jpg" alt="ảnh đại diện" class="header__navbar-user-img">
+                                <img src="photos/<?= $_SESSION['customer_photo'] ?>" alt="ảnh đại diện" class="header__navbar-user-img">
                                 <span class="header__navbar-user-name"><?= $_SESSION['customer_name']; ?></span>
 
                                 <ul class="header__navbar-user-menu">

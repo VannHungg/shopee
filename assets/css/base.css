@@ -22,6 +22,8 @@
 
 * {
     box-sizing: inherit;
+    margin: 0;
+    padding: 0;
 }
 
 html {
@@ -65,6 +67,10 @@ html {
     width: 1200px;
     max-width: 100%;
     margin: 0 auto;
+}
+
+.grid__full-height {
+    height: 100%;
 }
 
 .grid__full-width {
@@ -164,6 +170,10 @@ html {
     display: inline-flex;
     justify-content: center;
     align-items: center;
+}
+
+.btn.btn--full-width {
+    width: 100%;
 }
 
 .btn.btn--normal:hover {
@@ -290,6 +300,90 @@ vì phía trên cũng có .btn*/
     color: var(--white-color);
 }
 
+.form-container__crud-input-group {
+    flex: 1;
+}
+
+.form-container__crud-input::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.form-container__crud-input::before {
+    content: 'Chọn Ảnh';
+    display: inline-block;
+    background: linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 2px solid #ccc;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    --webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 500;
+    font-size: 1.3rem;
+}
+
+.form-container__crud-input:hover::before {
+    border-color: black;
+}
+
+.form-container__crud-input:active::before {
+    background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+input[type=text] {
+    padding: 12px 20px;
+    margin: 0px;
+    box-sizing: border-box;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    outline: none;
+}
+
+textarea {
+    width: 85%;
+    height: 150px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    outline: none;
+    font-size: 1.4rem;
+}
+
+select {
+    width: 50%;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.4rem;
+    padding: 0 6px;
+    background-color: #f1f1f1;
+    height: 30px;
+    outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type=number] {
+    outline: none;
+    border: 2px solid #ccc;
+    font-size: 1.4rem;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.form-container__submit {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 60px;
+
+}
+
 /* alert notify  */
 .alert-notify {
     animation: slideInLeft ease 0.3s, fadeOut linear 1s 2s forwards;
@@ -344,7 +438,7 @@ vì phía trên cũng có .btn*/
     background-color: var(--fail);
 }
 
-.decrease-quantity, 
+.decrease-quantity,
 .increase-quantity {
     display: block;
     text-decoration: none;

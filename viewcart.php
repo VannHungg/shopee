@@ -269,6 +269,7 @@ if (!isset($_SESSION['history_search'])) {
                             ?>
 
                             <form action="process_checkout.php" method="post" class="app__content-payment">
+                                <input type="hidden" name="customer_id" value="<?=$id?>">
                                 <div class="auth-form pdbt24 mrbt24 mrt24 manage__dasboard-show-item-body">
                                     <div class="auth-form__container">
                                         <header class="auth-form__header">
