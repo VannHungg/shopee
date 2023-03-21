@@ -22,6 +22,8 @@ if (isset($_SESSION['status']) && isset($_SESSION['message'])) {
 <script>
     setTimeout(() => {
         const alert = document.getElementById('alert');
-        alert.style.display = 'none';
+        if(alert) {
+            alert.style.display = 'none';
+        }
     }, 3000);
 </script>

@@ -1,9 +1,13 @@
 <?php
 session_start();
+require '../connect.php';
+if (!isset($_SESSION['num_bill'])) {
+    $_SESSION['num_bill'] = 0;
+}
 
 //chưa đăng nhập vào admin
 $level = isset($_SESSION['level']) ? $_SESSION['level'] : null;
-if($level == 2) {
+if ($level == 2) {
     $_SESSION['status'] = "fail";
     $_SESSION['message'] = "Bạn cần phải đăng nhập với tư cách admin";
     header("Location: signin.php");
@@ -33,19 +37,18 @@ if($level == 2) {
 <body>
     <div class="app">
         <?php
-            include "header.php";
+        include "header.php";
         ?>
 
         <div class="app__container">
             <div class="grid">
                 <div class="grid__row app__content">
-                    <?php 
-                        include "sidebar/sidebar.php";
+                    <?php
+                    include "sidebar/sidebar.php";
                     ?>
 
                     <div class="grid__column-10 app__content-product">
-                        <div class="app__content-advertisement"
-                        style="background-image: url(./assets/img/banhang.shopee.png);"></div>
+                        <div class="app__content-advertisement" style="background-image: url(./assets/img/banhang.shopee.png);"></div>
 
                         <div class="app__content-product-to-do-list">
                             <div class="app__content-product-to-do-list__heading">
@@ -110,6 +113,48 @@ if($level == 2) {
                                     </a>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="app__content-statistical">
+                            <form action="process_statistical.php" method="post" class="app__content-statistical-wrap">
+                                <h3 class="app__content-statistical-heading">Số lượng đơn hàng</h3>
+                                <span class="app__content-statistical-title">Chọn thời gian</span>
+                                <input type="date" name="previous_date" class="app__content-statistical__previous-date">
+                                <input type="date" value="<?= date('Y-m-d') ?>" name="present_date"><br>
+                                <input type="submit" class="btn btn--primary app__content-statistical-submit" value="Xem">
+                                <span class="app__content-statistical-result"><?= $_SESSION['num_bill']; ?></span>
+                            </form>
+                        </div>
+
+                        <?php
+                        $sql_statistical_num_product = "
+                        SELECT products.id as products_id, name, ifnull(sum(quantity), 0) as quantity_sale
+                        FROM products
+                        LEFT JOIN bill_product ON
+                        bill_product.product_id = products.id
+                        LEFT JOIN bill ON
+                        bill.id = bill_product.bill_id
+                        WHERE bill.status = 1 OR bill.id is null
+                        GROUP BY products.id
+                        OrDER BY quantity_sale asc, products_id asc";
+                        $arr_statistical_num_product = mysqli_query($connect, $sql_statistical_num_product);
+                        ?>
+
+                        <div class="app__content-product-sold">
+                            <table border="1">
+                                <tr>
+                                    <th class="col col-0">Product_id</th>
+                                    <th class="col col-2">Product_name</th>
+                                    <th class="col col-2">quantity</th>
+                                </tr>
+                                <?php foreach ($arr_statistical_num_product as $value) { ?>
+                                    <tr>
+                                        <td class="col col-0"><?=$value['products_id']?></td>
+                                        <td class="col col-2"><?=$value['name']?></td>
+                                        <td class="col col-2"><?=$value['quantity_sale']?></td>
+                                    </tr>
+                                <?php }?>
+                            </table>
                         </div>
                     </div>
                 </div>

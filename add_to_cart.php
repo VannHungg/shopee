@@ -1,8 +1,7 @@
 <?php
 session_start();
-// unset($_SESSION['cart']);
 $id = $_GET['id'];
-$page = $_GET['page'];
+// $page = $_GET['page'];
 
 //nếu cart trống
 if (empty($_SESSION['cart'][$id])) {
@@ -29,4 +28,5 @@ if (empty($_SESSION['cart'][$id])) {
 
 $_SESSION['status'] = "success";
 $_SESSION['message'] = "Thêm sản phẩm vào giỏ hàng thành công";
-header('Location: index.php?page=' . $page);
+// header('Location: index.php?page=' . $page);
+header('Location: index.php');

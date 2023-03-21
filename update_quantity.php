@@ -22,5 +22,3 @@ else {
         $_SESSION['message'] = "Bạn đặt hơi nhiều sản phẩm rồi đấy 🤑";
     }
 }
-
-header('Location: viewcart.php');

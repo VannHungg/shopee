@@ -443,7 +443,7 @@
 }
 
 .app__content-advertisement {
-    width: 100%;
+    width: 72%;
     height: 66px;
     /* background-size: auto 100%; */
     background-size: contain;
@@ -452,7 +452,7 @@
 }
 
 .app__content-product-to-do-list {
-    width: 776px;
+    width: 72%;
     background-color: var(--white-color);
     border: 1px solid rgba(0, 0, 0, 0.09);
     border-radius: 2px;
@@ -478,6 +478,10 @@
     padding: 5px 0;
 }
 
+.app__content-product-sold {
+    margin-top: 12px;
+}
+
 .to-do-list-wrap {
     display: block;
     text-decoration: none;
@@ -501,6 +505,48 @@
 .to-do-list-wrap__name {
     display: block;
     font-size: 1.4rem;
+}
+
+.app__content-statistical-wrap {
+    background-color: var(--white-color);
+    margin-top: 16px;
+    width: 72%;
+    padding: 12px;
+}
+
+.app__content-statistical-heading {
+    padding: 0 0 8px;
+    border-bottom: 1px solid #e3e3e3;
+    font-size: 1.3rem;
+}
+
+.app__content-statistical-title {
+    font-size: 1.2rem;
+    color: var(--text-color);
+}
+
+.app__content-statistical__previous-date {
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.app__content-statistical-submit {
+    min-width: 40px;
+    height: 20px;
+    margin: 8px 8px 0 0;
+}
+
+.btn.app__content-statistical-submit {
+    background-color: var(--white-color);
+    border: 2px solid var(--primary-color);
+    color: var(--text-color);
+    border-radius: 2px;
+}
+
+.btn.app__content-statistical-submit:hover {
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    color: var(--white-color);
 }
 
 .manage__dasboard {

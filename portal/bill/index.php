@@ -24,7 +24,6 @@ require('../check_admin_login.php');
 
 <body>
     <?php
-    session_start();
     require('../../connect.php');
 
     $sql = "SELECT *FROM bill";

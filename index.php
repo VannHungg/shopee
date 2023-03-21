@@ -34,10 +34,9 @@ if (isset($_SESSION['customer_id'])) {
             WHERE id = '$customer_id'";
     $arr = mysqli_query($connect, $sql);
     $customer_photo = mysqli_fetch_array($arr)['photo'];
-    if($customer_photo != '') {
+    if ($customer_photo != '') {
         $_SESSION['customer_photo'] = $customer_photo;
-    }
-    else {
+    } else {
         $_SESSION['customer_photo'] = 'default.jpg';
     }
 }
@@ -55,9 +54,11 @@ if (isset($_SESSION['customer_id'])) {
 
     <link rel="shortcut icon" type="image/x-icon" href="./assets/img/shopee-icon.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href="./fonts/fontawesome-free-6.1.2-web/css/all.min.css">
     <link rel="stylesheet" href="./assets/css/base.css">
     <link rel="stylesheet" href="./assets/css/main.css">
-    <link rel="stylesheet" href="./fonts/fontawesome-free-6.1.2-web/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
@@ -65,7 +66,6 @@ if (isset($_SESSION['customer_id'])) {
 
 <body>
     <?php
-
     $sql = "SELECT * FROM products";
     $results = mysqli_query($connect, $sql);
     ?>
@@ -158,27 +158,26 @@ if (isset($_SESSION['customer_id'])) {
                                 Trợ giúp
                             </a>
                         </li>
-                        <?php if (!isset($_SESSION['customer_id'])) { ?>
-                            <a href="signup.php" class="header__navbar-item header__navbar-item--strong header__navbar-item--separate">Đăng ký</a>
-                            <a href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
-                        <?php } else { ?>
-                            <li class="header__navbar-item header__navbar-user">
-                                <img src="photos/<?= $_SESSION['customer_photo'] ?>" alt="ảnh đại diện" class="header__navbar-user-img">
-                                <span class="header__navbar-user-name"><?= $_SESSION['customer_name']; ?></span>
+                        <button <?php if (!empty($_SESSION['customer_id'])) { ?> style="display: none" <?php }?> id="btn-signup" type="button" data-toggle="modal" data-target="#myModal" class="header__navbar-item header__navbar-item--strong header__navbar-item--separate signin-guest">Đăng ký</button>
+                        <a id="signin-guest" <?php if (!empty($_SESSION['customer_id'])) { ?> style="display: none" <?php }?> href="signin.php" class="header__navbar-item header__navbar-item--strong">Đăng nhập</a>
+                        <?php include 'signup.php'; ?>
 
-                                <ul class="header__navbar-user-menu">
-                                    <li class="header__navbar-user-item">
-                                        <a href="profile.php">Tài khoản của tôi</a>
-                                    </li>
-                                    <li class="header__navbar-user-item">
-                                        <a href="purchase.php">Đơn mua</a>
-                                    </li>
-                                    <li class="header__navbar-user-item">
-                                        <a href="signout.php">Đăng xuất</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        <?php } ?>
+                        <li id="signin-user" <?php if (empty($_SESSION['customer_id'])) { ?> style="display: none" <?php }?> class="header__navbar-item header__navbar-user">
+                            <img src="photos/<?= $_SESSION['customer_photo'] ?>" alt="ảnh đại diện" class="header__navbar-user-img">
+                            <span class="header__navbar-user-name"><?= $_SESSION['customer_name'] ?? ''; ?></span>
+
+                            <ul class="header__navbar-user-menu">
+                                <li class="header__navbar-user-item">
+                                    <a href="profile.php">Tài khoản của tôi</a>
+                                </li>
+                                <li class="header__navbar-user-item">
+                                    <a href="purchase.php">Đơn mua</a>
+                                </li>
+                                <li class="header__navbar-user-item">
+                                    <a href="signout.php">Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </nav>
 
@@ -228,17 +227,16 @@ if (isset($_SESSION['customer_id'])) {
                                                 <li class="header__search-history-item">
                                                     <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
                                                 </li>
-                                        <?php
+                                            <?php
                                             }
-                                        }
-                                        else { 
+                                        } else {
                                             for ($i = (count($_SESSION['history_search']) - 1); $i >= 0; $i--) { ?>
                                                 <li class="header__search-history-item">
                                                     <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
-                                                </li>    
+                                                </li>
 
                                         <?php }
-                                        }?>
+                                        } ?>
                                     </ul>
                                 </div>
                             <?php } ?>
@@ -272,8 +270,9 @@ if (isset($_SESSION['customer_id'])) {
                         <div class="header__cart-wrap">
                             <a href="viewcart.php" class="header__cart-link">
                                 <i class="header__cart-icon fa-solid fa-cart-shopping"></i>
-                                <?php if (!empty($_SESSION['cart'])) { ?>
-                                    <span class="header__cart--num-product"><?= count($_SESSION['cart']) ?></span>
+                                <?php if (!empty($_SESSION['cart'])) {
+                                    $count_cart = count($_SESSION['cart']); ?>
+                                    <span class="header__cart--num-product"><?= $count_cart; ?></span>
                                 <?php } ?>
                             </a>
 
@@ -438,10 +437,14 @@ if (isset($_SESSION['customer_id'])) {
                                                         <span class="home-product-item__sold">Đã bán 9,6k</span>
                                                     </div>
                                                     <?php if (isset($_SESSION['customer_id'])) { ?>
-                                                        <a href="add_to_cart.php?id=<?= $value['id'] ?>&page=<?= $page; ?>" class="home-product-item__like home-product-item__like--liked">
+                                                        <!-- <a href="add_to_cart.php?id=<?= $value['id'] ?>&page=<?= $page; ?>" class="home-product-item__like home-product-item__like--liked">
                                                             <i class="home-product-item__like-icon--empty fa-regular fa-heart"></i>
                                                             <i class="home-product-item__like-icon--fill fa-solid fa-heart"></i>
-                                                        </a>
+                                                        </a> -->
+
+                                                        <button class="home-product-item__btn" data-id="<?= $value['id'] ?>">
+                                                            <i class="fa-regular fa-heart"></i>
+                                                        </button>
                                                     <?php } ?>
                                                 </div>
                                             </div>
@@ -489,20 +492,55 @@ if (isset($_SESSION['customer_id'])) {
     </div>
 </body>
 
-<script type="text/javascript" src="./assets/jquery/jquery.min.js">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        let menu = document.getElementById('parentMenu');
+        let list = document.getElementById('parentList');
+
+        menu.onclick = function() {
+            if (list.style.display === 'block') {
+                list.style.display = 'none';
+            } else {
+                list.style.display = 'block';
+            }
+        }
+    });
 </script>
 
 <script>
-    let menu = document.getElementById('parentMenu');
-    let list = document.getElementById('parentList');
+    $(document).ready(function() {
+        $('.home-product-item__btn').click(function() {
+            let button = $(this);
+            let id = button.data('id');
+            let parent_product = button.parents('.home-product-item');
+            let quantity = button.find('.header__cart--num-product').text();
+            console.log(quantity);
+            if (quantity == 0) {
+                quantity = 1;
+            } else {
+                quantity++;
+            }
+            $.ajax({
+                method: "GET",
+                url: "add_to_cart.php",
+                data: {
+                    id
+                },
+                // dataType: "dataType",
+                success: function(response) {
+                    $('.header__cart--num-product').text(quantity);
+                }
+            });
+        });
 
-    menu.onclick = function() {
-        if (list.style.display === 'block') {
-            list.style.display = 'none';
-        } else {
-            list.style.display = 'block';
-        }
-    };
+        $('#btn-signup').click(function() {
+            $('#myModal').style.display = "block";
+        });
+    });
 </script>
 
 </html>

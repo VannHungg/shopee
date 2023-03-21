@@ -178,12 +178,12 @@ if (!isset($_SESSION['history_search'])) {
                                         <ul class="header__search-history-list">
                                             <?php
                                             if (count(($_SESSION['history_search'])) >= 3) {
-                                                for ($i = (count($_SESSION['history_search']) - 1); $i >= (count($_SESSION['history_search']) - 3); $i--) { ?>
+                                                for ($i = (count($_SESSION['history_search']) - 1); $i >= (count($_SESSION['history_search']) - 3); $i--) {
+                                            ?>
                                                     <li class="header__search-history-item">
                                                         <a href="history_search.php?search=<?= $_SESSION['history_search'][$i]; ?>"><?= $_SESSION['history_search'][$i]; ?></a>
                                                     </li>
-                                                <?php
-                                                }
+                                                <?php }
                                             } else {
                                                 for ($i = (count($_SESSION['history_search']) - 1); $i >= 0; $i--) { ?>
                                                     <li class="header__search-history-item">
@@ -214,50 +214,50 @@ if (!isset($_SESSION['history_search'])) {
                             <?php
                             require('./portal/alert.php');
                             ?>
-                            <form action="process_cart.php" method="post" class="manage__dasboard manage__dasboard--reset">
+                            <div class="manage__dasboard manage__dasboard--reset">
                                 <div class="manage__dasboard-show">
                                     <ul class="manage__dasboard-show-list">
                                         <li class="manage__dasboard-show-item-header manage__dasboard-show-item-header--reset">
-                                            <div class="col col-2">
-                                                <input type="radio" name="" id="">
-                                                Sản phẩm
-                                            </div>
+                                            <div class="col col-2">Sản phẩm</div>
                                             <div class="col col-3">Đơn giá</div>
                                             <div class="col col-3">Số lượng</div>
                                             <div class="col col-3">Số tiền</div>
-                                            <div class="col col-4">
-                                                Thao tác
-                                            </div>
+                                            <div class="col col-4">Thao tác</div>
                                         </li>
                                         <?php foreach ($cart as $id => $each) { ?>
                                             <li class="manage__dasboard-show-item-body">
                                                 <div class="col col-2 manage__dasboard-show-item-name-product">
-                                                    <input type="radio" name="" id="" class="mrr8">
                                                     <img src="photos/<?= $each['photo'] ?>" alt="" class="manage__dasboard-show-item-img">
                                                     <span class="manage__dasboard-show-item-name"><?= $each['name'] ?></span>
                                                 </div>
-                                                <div class="col col-3"><?= number_format($each['price']) ?>đ</div>
+                                                <div class="col col-3">
+                                                    <span class="manage__dasboard-show-item-price">
+                                                        <?= ($each['price']) ?>
+                                                    </span>đ
+                                                </div>
                                                 <div class="col col-3">
                                                     <div class="manage__dasboard-show-item-quantity-group">
-                                                        <a href="update_quantity.php?id=<?= $id ?>&type=decrease" class="decrease-quantity">-</a>
+                                                        <button class="btn-update-quantity" data-id="<?= $id ?>" data-type="decrease">-</button>
                                                         <span class="manage__dasboard-show-item-quantity"><?= $each['quantity'] ?></span>
-                                                        <a href="update_quantity.php?id=<?= $id ?>&type=increase" class="increase-quantity">+</a>
+                                                        <button class="btn-update-quantity" data-id="<?= $id ?>" data-type="increase">+</button>
                                                     </div>
                                                 </div>
                                                 <div class="col col-3">
-                                                    <?php
-                                                    $sum += ($each['price'] * $each['quantity']);
-                                                    echo number_format($each['price'] * $each['quantity']);
-                                                    ?>đ
+                                                    <span class="manage__dasboard-show-item-total">
+                                                        <?php
+                                                        $sum += ($each['price'] * $each['quantity']);
+                                                        echo ($each['price'] * $each['quantity']);
+                                                        ?>đ
+                                                    </span>
                                                 </div>
                                                 <div class="col col-4">
-                                                    <a href="delete.php?id=<?= $id ?>&page=viewcart" class="manage__dasboard-show-item-action">Xóa</a>
+                                                    <button class="manage__dasboard-show-item-action" data-id="<?= $id ?>">Xóa</button>
                                                 </div>
                                             </li>
                                         <?php } ?>
                                     </ul>
                                 </div>
-                            </form>
+                            </div>
 
                             <?php
                             require('connect.php');
@@ -269,7 +269,7 @@ if (!isset($_SESSION['history_search'])) {
                             ?>
 
                             <form action="process_checkout.php" method="post" class="app__content-payment">
-                                <input type="hidden" name="customer_id" value="<?=$id?>">
+                                <input type="hidden" name="customer_id" value="<?= $id ?>">
                                 <div class="auth-form pdbt24 mrbt24 mrt24 manage__dasboard-show-item-body">
                                     <div class="auth-form__container">
                                         <header class="auth-form__header">
@@ -303,7 +303,7 @@ if (!isset($_SESSION['history_search'])) {
                                     </div>
 
                                     <div class="app__content-total-payment__link">
-                                        <span>Tổng thanh toán: <span class="color--primary"><?= number_format($sum) ?>đ</span></span>
+                                        <span>Tổng thanh toán: <span class="color--primary" id="span-total-payment"><?= number_format($sum) ?>đ</span></span>
                                         <input type="submit" value="Đặt hàng">
                                     </div>
                                 </div>
@@ -336,6 +336,70 @@ if (!isset($_SESSION['history_search'])) {
             list.style.display = 'block';
         }
     };
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('.btn-update-quantity').click(function() {
+            let button = $(this);
+            let id = button.data('id');
+            let type = button.data('type');
+            $.ajax({
+                type: "GET",
+                url: "update_quantity.php",
+                data: {
+                    id,
+                    type
+                },
+                // dataType: "dataType",
+                success: function() {
+                    let parent_btn = button.parents('.manage__dasboard-show-item-body');
+                    let price = parent_btn.find('.manage__dasboard-show-item-price').text();
+                    let quantity = parent_btn.find('.manage__dasboard-show-item-quantity').text();
+                    if (type == 'decrease' && quantity > 1) {
+                        quantity--;
+                    } else if (type == 'increase' && quantity < 10) {
+                        quantity++;
+                    }
+                    parent_btn.find('.manage__dasboard-show-item-quantity').text(quantity);
+                    let pay = price * quantity;
+                    // pay = pay.toLocaleString('en-US', {style : 'currency', currency : 'VND'});
+                    parent_btn.find('.manage__dasboard-show-item-total').text(pay + 'đ');
+
+                    getTotal();
+                }
+            });
+        });
+
+        $('.manage__dasboard-show-item-action').click(function() {
+            let button = $(this);
+            let id = button.data('id');
+            $.ajax({
+                type: "GET",
+                url: "delete.php",
+                data: {
+                    id
+                },
+                // dataType: "dataType",
+                success: function(response) {
+                    button.parents('.manage__dasboard-show-item-body').remove();
+                    getTotal();
+                }
+            });
+        });
+    });
+
+    function getTotal() {
+        let total = 0;
+        $('.manage__dasboard-show-item-total').each(function() {
+            total += parseFloat($(this).text());
+        });
+        total = total.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'VND'
+        });
+        $('#span-total-payment').text(total);
+    }
 </script>
 
 </html>

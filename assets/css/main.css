@@ -173,6 +173,8 @@
     font-weight: 600;
     text-decoration: none;
     color: var(--white-color);
+    border: none;
+    background-color: transparent;
 }
 
 .header__navbar-icon-link {
@@ -1141,6 +1143,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 25px;
+    box-shadow: 0px 0px 9px 0px rgb(0 0 0 / 10%);
 }
 
 .manage__dasboard-show-item-header {
@@ -1207,6 +1210,8 @@
     display: block;
     padding: 8px;
     color: var(--blue-color);
+    border: none;
+    background-color: var(--white-color);
 }
 
 .app__content-payment {
@@ -1889,6 +1894,11 @@ i.home-product-item__like-icon--fill {
     display: inline-block;
 }
 
+.home-product-item__btn {
+    border: none;
+    background-color: var(--white-color);
+}
+
 .home-product-item__favourite {
     position: absolute;
     top: 10px;
@@ -1956,6 +1966,7 @@ i.home-product-item__like-icon--fill {
     font-size: 1.3rem;
     line-height: 1.3rem;
     font-weight: 550;
+    display: block;
 }
 
 .pagination--margin {
@@ -2049,9 +2060,6 @@ i.home-product-item__like-icon--fill {
 }
 
 /* header login */
-.header {
-    box-shadow: ;
-}
 
 .auth-header {
     height: 84px;
